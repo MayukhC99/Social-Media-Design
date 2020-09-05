@@ -25,5 +25,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+app.use('/root',require('./routes/root').route);
+app.use('/profile',require('./routes/profile').route);
+app.use('/login',require('./routes/login').route);
+app.use('/signup',require('./routes/signup').route);
+
 app.listen(port, ()=>{console.log(`Mode: ${process.env.NodeEnv} hosted on port ${port}`)});
 
