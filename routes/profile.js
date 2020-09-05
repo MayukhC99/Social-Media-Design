@@ -128,6 +128,23 @@ route.get('/delete/profile_image',(req,res)=>{
     })
 })
 
+route.post('change_password',(req,res)=>{
+    users.findOneAndUpdate({username: req.user.username},{
+        $set: {
+            password: req.user.password
+        }
+    },{
+        new: true
+    }, (err,docs)=>{
+        if(err){
+            console.log("Error has occured on /profile/change_password");
+            return res.send(undefined);
+        }
+        
+        return res.send(docs);
+    })
+})
+
 
 //api to get details of a user
 route.get('get_details',(req,res)=>{

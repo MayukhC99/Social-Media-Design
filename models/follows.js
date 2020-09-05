@@ -12,6 +12,7 @@ const follow = new Schema({
     }
 });
 
+follow.index({ username: 1, following: 1}, { unique: true });
 
 const follows = mongoose.model('follow',follow);
 
