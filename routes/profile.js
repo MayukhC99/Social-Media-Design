@@ -2,7 +2,132 @@ const express = require('express');
 const users = require('../models/users').users;
 const posts = require('../models/posts').posts;
 const follows = require('../models/follows').follows;
+const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
 const route = express.Router();
+
+const storage_engine = multer.diskStorage({
+    destination: './public/uploads',
+    filename: function(req,file,done){
+        
+        done(null,req.user.username+'-'+Date.now()+path.extname(file.originalname));//path.extname can extract extension name from file name
+    }
+});
+
+//creating fileFilter function
+
+const customFileFilter = function(req,file,done){
+    const regex= /\jpg$|\jpeg$|\png$|\gif$/
+
+    const check_filename = regex.test(file.originalname);
+
+    const check_mimetype= regex.test(file.mimetype);
+
+    if(check_filename && check_mimetype){
+        done(null,true);
+    } else {
+        done('Error: Images only');
+    }
+}
+
+const upload = multer({
+    storage: storage_engine,
+    limits: {fileSize: 1000000},
+    fileFilter: customFileFilter
+}).single('profile_image');  //name should be profile_image
+
+//handling post request containing the file(profile_picture)
+route.post('/upload/profile_image',(req,res)=>{
+    upload(req,res,(err)=>{
+        if(err){
+           return res.send(undefined);
+        } else {
+            if(req.file === undefined){
+                res.send("undefined");
+            } else {
+
+                if(req.user.profile_picture !== '000.png'){
+                    //deleting the file
+                    fs.unlink('./public/uploads/'+req.user.profile_picture , (err) => {
+                        if (err){
+                            console.log(err);
+                            throw err;
+                        }
+                        console.log('The file has been deleted');
+                    });
+                }
+                req.user.profile_picture = req.file.filename;
+                users.findOneAndUpdate({"username" : req.user.username},{
+                    $set:{
+                        profile_picture: req.file.filename
+                    }
+                },(err,docs)=>{
+                    if(err){
+                        console.log("Error Occured while uploading");
+                        return res.send(undefined);
+                    }
+                    return res.send(req.file.filename);
+                })
+            }
+        }
+    })
+})
+
+//Api to update profile details
+route.post('/profile_update', (req,res) =>{
+
+    users.findOneAndUpdate({"username":req.user.username},{
+        $set:{
+            first_name: req.body.first_name,
+            last_name: req.body.last_name
+        }
+    }, {
+        new: true
+    }, (err,docs)=>{
+        if(err){
+            console.log("Error has occured on /profile/profile_update");
+            return res.send(undefined);
+        }
+        
+        return res.send(docs);
+    })
+})
+
+
+//to delete profile picture
+route.get('/delete/profile_image',(req,res)=>{
+
+    if(req.user.profile_picture !== '000.png'){
+        fs.unlink('./public/uploads/'+req.user.profile_picture , (err) => {
+            if (err){
+                console.log(err);
+                throw err;
+            }
+            console.log('The file has been deleted');
+        });
+    } else {
+        return res.send(undefined);
+    }
+
+    //db.query(`UPDATE users SET profile_picture="000.png" WHERE username= "${req.user.username}"`);
+    users.findOneAndUpdate({"username": req.user.username},{
+        $set: {
+            profile_picture: "000.png"
+        }
+    },{
+        new: true
+    },(err,docs)=>{
+        if(err){
+            console.log("Error occured in /profile/delete/profile_image");
+            return res.redirect('back');
+        }
+
+        req.user.profile_picture = "000.png";
+        return res.redirect('back');
+    })
+})
+
 
 //api to get details of a user
 route.get('get_details',(req,res)=>{
@@ -61,25 +186,6 @@ route.get('get_followers',(req,res)=>{
     })
 })
 
-
-// const post = new Schema({
-//     username: {
-//         type: String,
-//         required: true
-//     },
-//     head: {
-//         type: String,
-//         required: true
-//     },
-//     text: String,
-//     image: String,
-//     video: String,
-//     Likes: String,
-//     comments: [comment]
-// },{
-//     timestamps: true
-// });
-
 //api to get individual posts
 route.get('all_posts_individual',(req,res)=>{
     posts.find({username: req.user.username},function(err,docs){
@@ -119,16 +225,7 @@ route.get('all_posts_explore',(req,res)=>{
 })
 
 
-// const follow = new Schema({
-//     username: {
-//         type: String,
-//         required: true
-//     },
-//     following: {
-//         type: String,
-//         required: true
-//     }
-// });
+
 //api to get all posts by the followers
 route.get('all_posts_followers',(req,res)=>{
     follows.aggregate([
@@ -157,6 +254,8 @@ route.get('all_posts_followers',(req,res)=>{
         }
     });
 });
+
+
 
 
 
