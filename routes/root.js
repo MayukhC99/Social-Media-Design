@@ -93,6 +93,45 @@ route.post('/post/add',(req,res)=>{
 
 })
 
+//following user
+route.post('/user/follow',(req,res)=>{
+    let query = {username: req.user.username, following: req.body.username};
+    let update = {
+        username: req.user.username,
+        following: req.body.username
+    };
+    let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+    follows.findOneAndUpdate(query, update, options, function(err,docs){
+        if(err){
+            console.log('Error occured in /user/follow');
+            console.log(err);
+            return res.send(undefined);
+        }
+
+        if(docs){
+            console.log("docs found in /user/follow");
+            return res.send(docs);
+        } else {
+            console.log("No Such docs");
+            return res.send(undefined);
+        }
+    })
+})
+
+//unfollow user
+route.post('/user/unfollow',(req,res)=>{
+    let query = {username: req.user.username, following: req.body.username};
+    follows.findOneAndDelete(query, function(err){
+        if(err){
+            console.log('Error occured in /user/unfollow');
+            console.log(err);
+            return res.send(undefined);
+        }
+
+        return res.send("success");
+    })
+})
+
 
 module.exports = {
     route
