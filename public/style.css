@@ -1,0 +1,211 @@
+#sidebar{
+    list-style: none;
+}
+.leftnavbar header{
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 10px;
+}
+.fa-twitter{
+    color: skyblue;
+}
+.leftnavbar ul{
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 45px;
+    overflow-y: auto;
+    margin-left: -40px;
+}
+.leftnavbar ul li{
+    margin: 20px 0 20px 0;
+    font-size: 21px;
+    cursor: pointer;
+}
+.active{
+    color: skyblue;
+}
+.leftnavbar ul li:hover{
+    width: fit-content;
+    border-radius: 15px;
+    background-color: rgb(253, 246, 246);
+    color: rgb(108, 178, 206);
+}
+.leftnavbar ul li i{
+    padding-left: 10px;
+}
+.leftnavbar ul li span{
+    padding-left: 15px;
+    padding: 20px;
+    font-weight: bold;
+}
+.main{
+    border: 1px solid rgb(235, 222, 222);
+}
+.main header{
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white;
+    font-weight: bold;
+    font-size: larger;
+    padding: 10px 0 10px 10px;
+    margin-left: -15px;
+    width: calc(100% + 30px);
+}
+
+.main .mypost{
+    padding-top: 10px;
+    border-bottom: 1px solid rgb(235, 222, 222);
+}
+
+.main .mypost .imgtag img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: fill;
+    overflow: hidden;
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+.main .mypost .imgtag a{
+    top: 20px;
+    color: black;
+    font-weight: bold;
+}
+
+.main .mypost .imgtag a:focus{
+    outline: none;
+    box-shadow: none;
+}
+
+.main .mypost .postimg{
+    max-width: 500px;
+    max-height: 300px;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.main .mypost .postimg img{
+    width: auto;
+    height: auto;
+    max-width: 800px;
+    max-height: 800px;
+    margin-top: -5%;
+    margin-left: -10%;
+    overflow: hidden;
+}
+
+.main .mypost .reactions{
+    padding-top: 15px;
+}
+
+.main .mypost .reactions div i, .main .mypost .reactions div span{
+    cursor: pointer;
+}
+
+.createpost{
+    height: auto;
+}
+.createpost input{
+    border: none;
+    outline: none;
+}
+.fa-image{
+    color: gray;
+}
+.mypic{
+    margin: 0;
+    padding-right: 0;
+}
+.mypic img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: fill;
+    overflow: hidden;
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+textarea{
+    border: none;
+    height: auto;
+    overflow-y: hidden;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+textarea:focus{
+    outline: none;
+    box-shadow: none;
+}
+
+.postsection{
+    border-bottom: 10px solid rgb(235, 222, 222);
+}
+#makepost{
+    float: right;
+    height: 35px;
+    width: 70px;
+    border-radius: 25px;
+    border: none;
+    padding-top: 5px;
+    font-weight: 700;
+    text-align: center;
+    background-color: skyblue;
+    color: white;
+}
+#makepost:focus{
+    outline: none;
+}
+#postimgfield{
+    max-width: 500px;
+    max-height: 300px;
+    overflow: hidden;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+#imgupload{
+    width: auto;
+    height: auto;
+    max-width: 700px;
+    max-height: 700px;
+    margin-top: -5%;
+    margin-left: -10%;
+    overflow: hidden;
+}
+#deleteimg{
+    position: absolute;
+    background-color: black;
+    top: 55px;
+    left: 20px;
+    color: white;
+    line-height: 50px;
+    margin-right: 20px;
+    cursor: pointer;
+    display: none;
+    margin-top: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+#deleteimg:focus{
+    outline: none;
+    box-shadow: none;
+}
+#deleteimg span{
+    width: 20px;
+    height: 3px;
+    margin: 0 auto;
+    display: block;
+    background: white;
+    transition: all 0.8s cubic-bezier(0.810, -0.330, 0.345, 1.375);
+}
+
+#deleteimg span:first-child{
+    transform: rotate(-45deg) translate(-4px, 1px);
+}
+#deleteimg span:last-child{
+    transform: rotate(46deg) translate(-1px, 1px);
+}
