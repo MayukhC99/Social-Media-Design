@@ -38,10 +38,10 @@ const post = new Schema({
 });
 
 
-const post = mongoose.model('post',post);
+const posts = mongoose.model('post',post);
 
 module.exports = {
-    post
+    posts
 };
 
 
