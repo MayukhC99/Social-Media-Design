@@ -139,6 +139,97 @@ route.post('/user/unfollow',(req,res)=>{
     })
 })
 
+//apis to increment likes
+route.post('/post/inc_likes',(req,res)=>{
+    posts.findById(req.body.id , (err,docs)=>{
+        if(err){
+            console.log("error in /root/post/inc_likes");
+            return res.send(undefined);
+        }
+
+        if(docs){
+            let likes = parseInt(docs.Likes);
+            let Users_liked = docs.users_liked;
+            Users_liked.append({"username": req.user.username}); //appending user that liked
+            likes+= 1; //incrementint likes by 1
+
+            posts.findOneAndUpdate({"_id": docs._id}, {
+                $set: {
+                    Likes: likes,
+                    users_liked: Users_liked
+                }
+            }, {
+                new: true
+            }, (err,docs)=>{
+                if(err){
+                    console.log("error while updating in /root/post/inc_likes");
+                    return res.send(undefined);
+                }
+
+                if(docs){
+                    console.log("Successfully incremented likes and added users_liked");
+                    return res.send(docs);
+                } else {
+                    console.log("post not found in /root/post/inc_likes");
+                    return res.send(undefined);
+                }
+            })
+
+        } else {
+            console.log("posts not found in /root/post/inc_likes");
+            res.send(undefined);
+        }
+    })
+})
+
+
+//api to check if the post is liked by the user
+route.post('/post/likes_check',(req,res)=>{
+    posts.findById(req.body.id , (err,docs)=>{
+        if(err){
+            console.log("error in /root/post/likes_check");
+            return res.send(undefined);
+        }
+
+        if(docs){
+            let Users_liked = docs.users_liked;
+
+            if(Users_liked.indexOf({"username": req.user.username}) != -1)
+                return res.send(true);
+            else
+                return res.send(false);
+
+        } else {
+            console.log("No such posts in /root/post/likes_check");
+        }
+    })
+})
+
+
+//api to add comments
+route.post('/post/add_comments',(req,res)=>{
+    posts.findByIdAndUpdate(req.body.id , {
+        $set: {
+            comments: JSON.parse(req.body.comments)
+        }
+    },{
+        new: true
+    }, (err,docs)=>{
+        if(err){
+            console.log("error in /post/add_comments");
+            return res.send(undefined);
+        }
+
+        if(docs){
+            console.log("Successfully updated comments");
+            return res.send(docs);
+        } else {
+            console.log("Posts does not exists");
+            return res.send(undefined);
+        }
+    })
+})
+
 
 //api to render profile or profile view page
 route.get('/:username',(req,res,next)=>{
