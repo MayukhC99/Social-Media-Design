@@ -184,18 +184,33 @@
     cursor: pointer;
 }
 
-.main #editprofile{
+.main #editprofile, .main #followuser{
     color: rgb(78, 154, 184);
     border-color: rgb(78, 154, 184);
     border-radius: 25px;
 }
 
-.main #editprofile:focus{
+.main #followinguser{
+    color: white;
+    background-color: rgb(19, 89, 117);
+    border-radius: 25px;
+}
+
+.main #followinguser:focus{
+    box-shadow: none;
+    outline: none;
+}
+
+.main #followinguser:hover{
+    background-color: red;
+}
+
+.main #editprofile:focus, .main #followuser:focus{
     outline: none;
     box-shadow: none;
 }
 
-.main #editprofile:hover{
+.main #editprofile:hover, .main #followuser:hover{
     background-color: rgb(223, 240, 247);
 }
 

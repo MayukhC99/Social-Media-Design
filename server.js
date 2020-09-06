@@ -30,7 +30,7 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname,'public')));
 
-app.use(express.static(path.join(__dirname,'public')));
+// app.use(express.static(path.join(__dirname,'public')));
 app.use('/root',require('./routes/root').route);
 app.use('/profile',require('./routes/profile').route);
 app.use('/login',require('./routes/login').route);

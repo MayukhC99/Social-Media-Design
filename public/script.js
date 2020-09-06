@@ -110,4 +110,11 @@ $(document).ready(function(){
             sidebar.html(str);
         }
     });
+
+
+    // $.get("/profile/post/add_comments",function(data){
+
+    // })
+
+
 })

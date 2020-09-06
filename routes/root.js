@@ -139,6 +139,13 @@ route.post('/user/unfollow',(req,res)=>{
     })
 })
 
+
+route.get('/get_username',(req,res)=>{
+    if(req.user){
+        return res.send(req.user.username);
+    }
+})
+
 //apis to increment likes
 route.post('/post/inc_likes',(req,res)=>{
     posts.findById(req.body.id , (err,docs)=>{
@@ -257,7 +264,7 @@ route.get('/:username',(req,res,next)=>{
       
               console.log('success in finding user');
     
-              return res.sendFile(path.join(__dirname,'..','public','viewuser','index.html'));
+              return res.sendFile(path.join(__dirname,'..','public','profile','index.html'));
       
               //return done(null, user);
 

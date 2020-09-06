@@ -17,7 +17,6 @@ $(function(){
         let password= typed_password.val();
 
         if((username!=='') && (first_name!=='') && (last_name!=='') && (password!=='')){
-
             $.ajax({
                 url: '/signup/getin',
                 type: 'POST',

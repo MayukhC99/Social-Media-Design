@@ -145,10 +145,17 @@ route.post('/change_password',(req,res)=>{
     })
 })
 
+route.get('/get_username', (req,res)=>{
+    if(req.user){
+        return req.user.username;
+    }
+})
+
 
 //api to get details of a user
-route.get('/get_details',(req,res)=>{
-    users.findOne({username: req.user.username}, function(err,docs){
+route.post('/get_details',(req,res)=>{
+    console.log(req.body);
+    users.findOne({username: req.body.username}, function(err,docs){
         if(err){
             console.log('Error occured in /profile/get_details');
             console.log(err);
@@ -166,10 +173,10 @@ route.get('/get_details',(req,res)=>{
 })
 
 //api to get following users
-route.get('/following_others',(req,res)=>{
+route.post('/following_others',(req,res)=>{
 
     follows.aggregate([
-        { "$match": { "username": req.user.username } },
+        { "$match": { "username": req.body.username } },
         {
             $lookup: {
                 from: "users", // collection name in db
@@ -212,11 +219,41 @@ route.get('/following_others',(req,res)=>{
     // })
 })
 
-//api to get followers
-route.get('/followers',(req,res)=>{
+route.get('/following_others',(req,res)=>{
 
     follows.aggregate([
-        { "$match": { "following": req.user.username } },
+        { "$match": { "username": req.user.username } },
+        {
+            $lookup: {
+                from: "users", // collection name in db
+                localField: "following",
+                foreignField: "username",
+                as: "data"
+            }
+        }
+    ]).exec(function(err, docs) {
+        if(err){
+            console.log('Error occured in /profile/followers');
+            console.log(err);
+            return res.send(undefined);
+        }
+
+        if(docs){
+            console.log("users found in /profile/followers");
+            return res.send(docs);
+        } else {
+            console.log("No users");
+            return res.send(undefined);
+        }
+    });
+
+})
+
+//api to get followers
+route.post('/followers',(req,res)=>{
+    console.log("finding all the followers of a individual user");
+    follows.aggregate([
+        { "$match": { "following": req.body.username } },
         {
             $lookup: {
                 from: "users", // collection name in db
@@ -257,6 +294,35 @@ route.get('/followers',(req,res)=>{
     //         return res.send(undefined);
     //     }
     // })
+})
+
+route.get('/followers',(req,res)=>{
+    console.log("finding all the followers of a individual user");
+    follows.aggregate([
+        { "$match": { "following": req.user.username } },
+        {
+            $lookup: {
+                from: "users", // collection name in db
+                localField: "username",
+                foreignField: "username",
+                as: "data"
+            }
+        }
+    ]).exec(function(err, docs) {
+        if(err){
+            console.log('Error occured in /profile/following_you');
+            console.log(err);
+            return res.send(undefined);
+        }
+
+        if(docs){
+            console.log("uesrs found in /profile//following_you");
+            return res.send(docs);
+        } else {
+            console.log("No users");
+            return res.send(undefined);
+        }
+    });
 })
 
 //api to get individual posts
