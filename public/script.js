@@ -85,6 +85,7 @@ $(document).ready(function(){
             enctype: 'multipart/form-data',
             success: (data) => {
                 console.log(data);
+                window.location.reload(true);
             }
         })
     })
@@ -112,9 +113,58 @@ $(document).ready(function(){
     });
 
 
-    // $.get("/profile/post/add_comments",function(data){
+    $.get("/profile/all_posts_followers",function(data){
+        let str = '';
+        if(data){
+            let len = data.length;
+            for(let i=0; i<len; i++){
+                let len2 = data[i]["Posts_of_followers"].length;
 
-    // })
+                for(let j=0; j<len2; j++){
+                    let likes_count = data[i]["Posts_of_followers"][j].Likes;
+                    if(!likes_count)
+                        likes_count = "";
+
+                    str+= `<div class="mypost">
+                    <div class="imgtag">
+                        <img src="./uploads/000.png">
+                        <a href="/root/${data[i]["Posts_of_followers"][j].username}">${data[i]["Posts_of_followers"][j].username}</a>
+                    </div>
+                    <p class="caption">${data[i]["Posts_of_followers"][j].text}</p>
+                    <div class="postimg">
+                        <img src="./post_assets/${data[i]["Posts_of_followers"][j].image}">
+                    </div>
+                    <div class="reactions">
+                        <div class="row">
+                            <div class="col-4 like">
+                                <span class="material-icons float-right">
+                                    favorite_border
+                                </span>
+                                <span class="likednumber float-right pr-2">${likes_count}</span>
+                            </div>
+                            <div class="col-4 comment">
+                                <i class="fa fa-comment-o fa-lg float-right"></i>
+                                <span class="float-right pr-2 commentnumber"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="commentsSection" style="display:none">
+                        <header>Comments</header>
+                        
+                    </div>
+                </div>`
+                }
+            }
+
+            if(str === '')
+                $("#post_section").html(`<h3>No Posts Available</h3>`);
+            else
+                $("#post_section").html(str);
+        } else {
+            console.log("No Post Available")
+            $("#post_section").html(`<h3>No Posts Available</h3>`);
+        }
+    })
 
 
 })

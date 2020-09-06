@@ -367,31 +367,35 @@ route.get('/all_posts_explore',(req,res)=>{
 
 //api to get all posts by the followers
 route.get('/all_posts_followers',(req,res)=>{
-    follows.aggregate([
-        { "$match": { "username": req.user.username } },
-        {
-            $lookup: {
-                from: "posts", // collection name in db
-                localField: "following",
-                foreignField: "username",
-                as: "Posts_of_following"
-            }
-        }
-    ]).exec(function(err, docs) {
-        if(err){
-            console.log('Error occured in /profile/all_posts_followers');
-            console.log(err);
-            return res.send(undefined);
-        }
 
-        if(docs){
-            console.log("posts found in /profile/all_posts_followers");
-            return res.send(docs);
-        } else {
-            console.log("No Posts");
-            return res.send(undefined);
-        }
-    });
+    if(req.user){
+        follows.aggregate([
+            { "$match": { "username": req.user.username } },
+            {
+                $lookup: {
+                    from: "posts", // collection name in db
+                    localField: "following",
+                    foreignField: "username",
+                    as: "Posts_of_followers"
+                }
+            }
+        ]).exec(function(err, docs) {
+            if(err){
+                console.log('Error occured in /profile/all_posts_followers');
+                console.log(err);
+                return res.send(undefined);
+            }
+
+            if(docs){
+                console.log("posts found in /profile/all_posts_followers");
+                return res.send(docs);
+            } else {
+                console.log("No Posts");
+                return res.send(undefined);
+            }
+        });
+    }
+    else return res.send(undefined);
 });
 
 
