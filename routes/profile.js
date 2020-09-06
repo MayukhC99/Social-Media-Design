@@ -128,7 +128,7 @@ route.get('/delete/profile_image',(req,res)=>{
     })
 })
 
-route.post('change_password',(req,res)=>{
+route.post('/change_password',(req,res)=>{
     users.findOneAndUpdate({username: req.user.username},{
         $set: {
             password: req.user.password
@@ -147,7 +147,7 @@ route.post('change_password',(req,res)=>{
 
 
 //api to get details of a user
-route.get('get_details',(req,res)=>{
+route.get('/get_details',(req,res)=>{
     users.findOne({username: req.user.username}, function(err,docs){
         if(err){
             console.log('Error occured in /profile/get_details');
@@ -166,45 +166,101 @@ route.get('get_details',(req,res)=>{
 })
 
 //api to get following users
-route.get('get_following',(req,res)=>{
-    follows.find({username: req.user.username}, function(err,docs){
+route.get('/following_others',(req,res)=>{
+
+    follows.aggregate([
+        { "$match": { "username": req.user.username } },
+        {
+            $lookup: {
+                from: "users", // collection name in db
+                localField: "following",
+                foreignField: "username",
+                as: "data"
+            }
+        }
+    ]).exec(function(err, docs) {
         if(err){
-            console.log('Error occured in /profile/get_following');
+            console.log('Error occured in /profile/followers');
             console.log(err);
             return res.send(undefined);
         }
 
         if(docs){
-            console.log("users found in /profile/get_following");
+            console.log("users found in /profile/followers");
             return res.send(docs);
         } else {
-            console.log("No users following");
+            console.log("No users");
             return res.send(undefined);
         }
-    })
+    });
+
+
+    // follows.find({username: "mayukhc99"}, function(err,docs){
+    //     if(err){
+    //         console.log('Error occured in /profile/get_following');
+    //         console.log(err);
+    //         return res.send(undefined);
+    //     }
+
+    //     if(docs){
+    //         console.log("users found in /profile/get_following");
+    //         return res.send(docs);
+    //     } else {
+    //         console.log("No users following");
+    //         return res.send(undefined);
+    //     }
+    // })
 })
 
 //api to get followers
-route.get('get_followers',(req,res)=>{
-    follows.find({following: req.user.username}, function(err,docs){
+route.get('/followers',(req,res)=>{
+
+    follows.aggregate([
+        { "$match": { "following": req.user.username } },
+        {
+            $lookup: {
+                from: "users", // collection name in db
+                localField: "username",
+                foreignField: "username",
+                as: "data"
+            }
+        }
+    ]).exec(function(err, docs) {
         if(err){
-            console.log('Error occured in /profile/get_followers');
+            console.log('Error occured in /profile/following_you');
             console.log(err);
             return res.send(undefined);
         }
 
         if(docs){
-            console.log("users found in /profile/get_followers");
+            console.log("uesrs found in /profile//following_you");
             return res.send(docs);
         } else {
-            console.log("No followers");
+            console.log("No users");
             return res.send(undefined);
         }
-    })
+    });
+
+    // follows.find({following: "mayukhc99"}, function(err,docs){
+    //     if(err){
+    //         console.log('Error occured in /profile/get_followers');
+    //         console.log(err);
+    //         return res.send(undefined);
+    //     }
+
+    //     if(docs){
+    //         console.log("users found in /profile/get_followers");
+    //         // let data = [];
+    //         return res.send(docs);
+    //     } else {
+    //         console.log("No followers");
+    //         return res.send(undefined);
+    //     }
+    // })
 })
 
 //api to get individual posts
-route.get('all_posts_individual',(req,res)=>{
+route.get('/all_posts_individual',(req,res)=>{
     posts.find({username: req.user.username},function(err,docs){
         if(err){
             console.log('Error occured in /profile/all_posts_individual');
@@ -223,7 +279,7 @@ route.get('all_posts_individual',(req,res)=>{
 });
 
 //api to get all post in reverse chronological order
-route.get('all_posts_explore',(req,res)=>{
+route.get('/all_posts_explore',(req,res)=>{
     posts.find({}).sort({updatedAt: 'desc'}).exec(function(err, docs) { 
         if(err){
             console.log('Error occured in /profile/all_posts_explore');
@@ -244,7 +300,7 @@ route.get('all_posts_explore',(req,res)=>{
 
 
 //api to get all posts by the followers
-route.get('all_posts_followers',(req,res)=>{
+route.get('/all_posts_followers',(req,res)=>{
     follows.aggregate([
         { "$match": { "username": req.user.username } },
         {
