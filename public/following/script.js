@@ -190,7 +190,7 @@ $(document).ready(function(){
         var one = class_name.split(' ')[2];
         var space = $("." + one + " .username").text();
         username = $.trim(space);
-        window.location = `/root/account_user/${username}`;
+        window.location = `/account_user/${username}`;
     });
 
 

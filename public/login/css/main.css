@@ -56,6 +56,12 @@ body, html {
 }
 
 /*---------------------------------------------*/
+
+.back{
+  background-color: rgb(233, 233, 233);
+  cursor: none;
+}
+
 a {
 	font-family: Poppins-Regular;
 	font-size: 14px;

@@ -61,8 +61,8 @@ $(document).ready(function(){
             let str = `<a style="color: black; text-decoration: none;" href="/"><li class="active" ><i class="fa fa-home"></i> <span>Home</span></li></a>
             <a style="color: black; text-decoration: none;" href="./explore/"><li ><i class="fa fa-hashtag"></i> <span>Explore</span></li></a>
             <a style="color: black; text-decoration: none;" href="/login/logout"><li ><i class="fa fa-sign-out"></i> <span>Logout</span></li></a>
-            <a style="color: black; text-decoration: none;" href="/root/account_user/${username}"><li ><i class="fa fa-user"></i> <span>Profile</span></li></a>
-            <a style="color: black; text-decoration: none;" href="./following/"><li ><i class="fa fa-users"></i> <span>followers/following</span></li></a>`;
+            <a style="color: black; text-decoration: none;" href="/root/${data}"><li ><i class="fa fa-user"></i> <span>Profile</span></li></a>
+            <a style="color: black; text-decoration: none;" href="./following/"><li ><i class="fa fa-users"></i> <span>followings</span></li></a>`;
             
             sidebar.html(str);
 
