@@ -24,6 +24,7 @@ app.use(express_sessions({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(express.static(path.join(__dirname,'public')));
 
 app.use('/root',require('./routes/root').route);
 app.use('/profile',require('./routes/profile').route);

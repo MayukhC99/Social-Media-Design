@@ -7,6 +7,76 @@ const multer = require('multer');
 const fs = require('fs');
 const route = express.Router();
 
+//api to render profile or profile view page
+route.get('/account_user/:username',(req,res,next)=>{
+
+    console.log('finding user');
+    if(req.user){
+
+      if(req.user.username == req.params.username){
+        return res.sendFile(path.join(__dirname,'..','public','profile','index.html'));
+
+      } else {
+
+        users.findOne({username: req.params.username} , function (err,user){
+            if(err){
+                console.log('user not found due to error 1');
+                return res.redirect('/error_404');
+                //return done(err);
+            }
+
+            if (!user) {
+                console.log('user not found 1');
+                return res.redirect('/error_404');
+                //return done(null, false, {message: "No such user"})
+              }
+      
+              console.log('success in finding user');
+    
+              return res.sendFile(path.join(__dirname,'..','public','viewuser','index.html'));
+      
+              //return done(null, user);
+
+
+        } ); 
+
+      }
+
+    } else {
+
+      users.findOne({ username: req.params.username } , function (err,user){
+          if(err){
+            console.log('user not found due to error 2');
+            return res.redirect('/error_404');
+            //return done(err);
+          }
+
+          if (!user) {
+            console.log('user not found 2');
+            return res.redirect('/error_404');
+            //return done(null, false, {message: "No such user"})
+          }
+  
+          console.log('success in finding user');
+  
+          return res.sendFile(path.join(__dirname,'..','public','viewuser','index.html'));
+  
+          //return done(null, user);
+
+      });
+
+    }  
+})
+
+//api to verify user
+route.get('/verify_user',(req,res)=>{
+    if(req.user){
+        return res.send(req.user.username);
+    } else {
+        return res.send(undefined);
+    }
+})
+
 //creating storage_engine
 const storage_engine = multer.diskStorage({
     destination: './public/post_assets',

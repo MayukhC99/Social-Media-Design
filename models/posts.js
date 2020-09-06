@@ -32,7 +32,8 @@ const post = new Schema({
     image: String,
     video: String,
     Likes: String,
-    comments: [comment]
+    comments: [comment],
+    users_liked: [{username: String}]
 },{
     timestamps: true
 });
