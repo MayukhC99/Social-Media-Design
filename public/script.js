@@ -1,14 +1,18 @@
 $(document).ready(function(){
-    var caption = $('#caption');
     var textarea = document.getElementById('writepost');
     var theImageField = document.getElementById('theImageField');
-    caption.text(caption.text().substring(0,500));
 
     $("#writepost").on('keyup', function(){
         textarea.style.height = "0px";
         textarea.style.height = textarea.scrollHeight + "px";
-        console.log(textarea.style.height);
+        if(textarea.value.length >= 1){
+            $("#makepost").prop('disabled', false);
+        }
+        if(textarea.value.length == 0){
+            $("#makepost").prop('disabled', true);
+        }
     })
+
 
     theImageField.onchange = function (e) {
         var theFile = e.target.files[0];
@@ -16,6 +20,7 @@ $(document).ready(function(){
         if(customFileFilter(theFile)) {
             handleUploadedFile(theFile);
             $("#deleteimg").show();
+            $("#makepost").prop('disabled', false);
         }
 
     }
@@ -53,6 +58,36 @@ $(document).ready(function(){
         reader.readAsDataURL(file);
     }
 
+    $("#deleteimg").on('click', function(){
+        $("#postimgfield #imgupload").attr('src', '');
+        $("#deleteimg").hide();
+        if(textarea.value.length == 0){
+            $("#makepost").prop('disabled', true);
+        }
+    })
+
+    $("#makepost").on('click', function(){
+        let formData = new FormData(document.getElementById('new_post'));
+        formData.append('head', 'Loving');
+        // alert(formData);
+        let text = $("#writepost").val();
+        let head = 'Loving';
+        // $.post('/root/post/add', {text: text, head: head}, (data) => {
+        //     console.log(data);
+        // })
+        // console.log(formData);
+        $.ajax({
+            url: '/root/post/add',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            success: (data) => {
+                console.log(data);
+            }
+        })
+    })
 
     $.get("/root/verify_user",function(data){
         let sidebar = $('#sidebar');

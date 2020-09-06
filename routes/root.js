@@ -21,7 +21,7 @@ route.get('/verify_user',(req,res)=>{
 const storage_engine = multer.diskStorage({
     destination: './public/post_assets',
     filename: function(req,file,done){
-    
+
         done(null,"posts"+Date.now()+path.extname(file.originalname));//path.extname can extract extension name from file name
     }
 });
@@ -50,14 +50,19 @@ const upload = multer({
 
 
 //handling post request containing the file
-route.post('/post/add',(req,res)=>{
+route.post('/post/add', (req,res)=>{
 
-    let create_post = function(){
+    let create_post = function(req){
+        f = undefined;
+        if(req.file){
+            f = req.file.filename;
+        }
+        
         posts.create({
-            username: req.body.username,
+            username: req.user.username,
             head: req.body.head,
             text: req.body.text,
-            image: req.file.filename
+            image: f
         }, function(err,docs){
             if(err){
                 console.log("Error while adding in /post/add");
@@ -75,29 +80,23 @@ route.post('/post/add',(req,res)=>{
         })
     }
 
-    if(req.body.post_image){
-
-        upload(req,res,(err)=>{
-            if(err){
-                console.log("Error occured in /post/add");
-                return res.send(undefined);
+    upload(req,res,(err)=>{
+        if(err){
+            console.log("Error occured in /post/add");
+            return res.send(undefined);
+        } else {
+            if(req.file === undefined){
+                console.log("file not uploaded in /post/add");
+                let docs = create_post(req);
+                return res.send(docs);
             } else {
-                if(req.file === undefined){
-                    console.log("file not uploaded in /post/add");
-                    return res.send(undefined);
-                } else {
-                    console.log("Picture successfully uploaded");
-    
-                    let docs = create_post();
-                    return res.send(docs);
-                }
-            }
-        })
+                console.log("Picture successfully uploaded");
 
-    } else {
-        let docs = create_post();
-        return res.send(docs);
-    }
+                let docs = create_post(req);
+                return res.send(docs);
+            }
+        }
+    })
 
 })
 

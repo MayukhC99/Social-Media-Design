@@ -19,27 +19,27 @@
                 </ul>
             </div>
             <div class="col-6 main">
-                <header>Home</header>
+                <header id="home">Home</header>
                 <div class="row postsection">
                     <div class="col-2 mypic">
                         <img src="./uploads/000.png">
                     </div>
                     <div class="col-10 createpost">
-                        <textarea class="col-12" rows="1" id="writepost" onkeyup="SetNewSize(this);" type="text" placeholder="What's happening?"></textarea>
-                        <br />
-                        <div id="postimgfield">
-                            <img id="imgupload" src="">
-                        </div>
+                        <form id="new_post" enctype="multipart/form-data">
+                            <textarea class="col-12" rows="1" id="writepost" name="text" type="text" maxlength="500" placeholder="What's happening?"></textarea>
+                            <br />
+                            <div id="postimgfield">
+                                <img id="imgupload" src="">
+                            </div>
+                            <input type="file" name="post_image" id="theImageField" style="display: none;">
+                            <label class="btn" for="theImageField" id="choose"><i class="fa fa-image"></i></label>
+                        </form>
                         <!-- <span id="deleteimg"><i class="fa fa-times-circle fa-2x"></i></span> -->
                         <button type="button" id="deleteimg">
                             <span></span>
                             <span></span>
                         </button>
-                        <div>
-                            <input type="file" name="profile_image" id="theImageField" style="display: none;">
-                            <label class="btn" for="theImageField" id="choose"><i class="fa fa-image"></i></label>
-                            <span id="makepost">Post</span>
-                        </div>
+                        <button id="makepost" disabled>Post</button>
                     </div>
                 </div>
                 <div class="mypost">
@@ -56,13 +56,56 @@
                             <div class="col-3" id="like">
                                 <span class="material-icons float-right">
                                     favorite_border
-                                </span></div>
+                                </span>
+                                <span class="float-right pr-2" id="likednumber">13</span>
+                            </div>
                             <div class="col-3" id="comment">
                                 <i class="fa fa-comment-o fa-lg float-right"></i>
+                                <span class="float-right pr-2" id="commentnumber">13</span>
                             </div>
                             <div class="col-3" id="share">
                                 <i class="fa fa-share fa-lg float-right"></i>
+                                <span class="float-right pr-2" id="sharednumber">13</span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="commentsSection">
+                        <header>Comments</header>
+                        <div class="commentWritten">
+                            <img src="./uploads/000.png">
+                            <a href="#">Sachin Tendulkar</a>
+                            <P>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</P>
+                            <div class="reactions">
+                                <div class="row">
+                                    <div class="col-3" id="like">
+                                        <span class="material-icons float-right">
+                                            favorite_border
+                                        </span>
+                                        <span class="float-right pr-2" id="likednumber">13</span>
+                                    </div>
+                                    <div class="col-3" id="reply">
+                                        <i class="fa fa-reply fa-lg float-right"></i>
+                                        <span class="float-right pr-2" id="repliednumber">13</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="replies">
+                                <img src="./uploads/000.png">
+                                <a href="#">Sachin Tendulkar</a>
+                                <P>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</P>
+                                <div class="reactions">
+                                    <div class="row">
+                                        <div class="col-3" id="like">
+                                            <span class="material-icons float-right">
+                                                favorite_border
+                                            </span>
+                                            <span class="float-right pr-2" id="likednumber">13</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="loadreply">show more replies</button>
+                            </div>
+                            <button class="loadcomments">show more comments</button>
                         </div>
                     </div>
                 </div>
