@@ -1,0 +1,324 @@
+#sidebar{
+    list-style: none;
+}
+.leftnavbar header{
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 10px;
+}
+.fa-twitter{
+    color: skyblue;
+}
+.leftnavbar ul{
+    position: fixed;
+    top: 45px;
+    overflow-y: auto;
+    margin-left: -40px;
+}
+.leftnavbar ul li{
+    margin: 20px 0 20px 0;
+    font-size: 21px;
+    cursor: pointer;
+}
+.active{
+    color: skyblue;
+}
+.leftnavbar ul li:hover{
+    width: fit-content;
+    border-radius: 15px;
+    background-color: rgb(253, 246, 246);
+    color: rgb(108, 178, 206);
+}
+.leftnavbar ul li i{
+    padding-left: 10px;
+}
+.leftnavbar ul li span{
+    padding-left: 15px;
+    padding: 20px;
+    font-weight: bold;
+}
+.main{
+    border: 1px solid rgb(235, 222, 222);
+}
+.main header{
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white;
+    padding: 10px 0 10px 10px;
+    margin-left: -15px;
+    width: calc(100% + 30px);
+}
+
+.main header i{
+    font-size: larger;
+    color: rgb(138, 138, 138);
+    cursor: pointer;
+}
+
+.main header span{
+    padding-left: 20px;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.main .backgroundImg{
+    width: auto;
+    height: 250px;
+    overflow: hidden;
+}
+
+.main .backgroundImg img{
+    width: auto;
+    height: auto;
+    max-width: 900px;
+    max-height: 900px;
+    margin-top: -5%;
+    margin-left: -10%;
+}
+
+.main .profileImg{
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 200px;
+    left: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 7px solid white;
+}
+
+.main .profileImg img{
+    height: auto;
+    width: auto;
+    margin-left: -30%;
+    max-height: 300px;
+    max-width: 300px;
+}
+
+.main .mydetails{
+    margin-top: 55px;
+}
+
+.main .mydetails #name{
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.mydetails #username{
+    color: rgb(83, 83, 218);
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.mydetails #bio{
+    margin-top: 10px;
+}
+
+.mydetails .followcount{
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.followcount a{
+    color: black;
+}
+
+.navbar{
+    margin-top: 20px;
+}
+
+.navbar ul li{
+    width: 160px;
+}
+
+.main .mypost{
+    padding-top: 10px;
+    border-bottom: 1px solid rgb(235, 222, 222);
+}
+
+.main .mypost .imgtag img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: fill;
+    overflow: hidden;
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+.main .mypost .imgtag a{
+    top: 20px;
+    color: black;
+    font-weight: bold;
+}
+
+.main .mypost .imgtag a:focus{
+    outline: none;
+    box-shadow: none;
+}
+
+.main .mypost .postimg{
+    max-width: 500px;
+    max-height: 300px;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.main .mypost .postimg img{
+    width: auto;
+    height: auto;
+    max-width: 800px;
+    max-height: 800px;
+    margin-top: -5%;
+    margin-left: -10%;
+    overflow: hidden;
+}
+
+.main .mypost .reactions{
+    padding-top: 15px;
+}
+
+.main .mypost .reactions div i, .main .mypost .reactions div span{
+    cursor: pointer;
+}
+
+.main #editprofile{
+    color: rgb(78, 154, 184);
+    border-color: rgb(78, 154, 184);
+    border-radius: 25px;
+}
+
+.main #editprofile:focus{
+    outline: none;
+    box-shadow: none;
+}
+
+.main #editprofile:hover{
+    background-color: rgb(223, 240, 247);
+}
+
+#profilemodal .backgroundImg{
+    width: auto;
+    height: 250px;
+    overflow: hidden;
+}
+
+#profilemodal .backgroundImg img{
+    width: auto;
+    height: auto;
+    max-width: 900px;
+    max-height: 900px;
+    margin-top: -5%;
+    margin-left: -10%;
+}
+
+#profilemodal .profileImg{
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 160px;
+    left: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 101;
+    border: 7px solid white;
+}
+
+#profilemodal .profileImg img{
+    height: auto;
+    width: auto;
+    margin-left: -30%;
+    max-height: 300px;
+    max-width: 300px;
+}
+
+#profilemodal .modal-body{
+    padding-top: 0;
+    overflow-x: hidden;
+}
+
+#changebackImg{
+    z-index: 1001;
+    position: absolute;
+    top: 95px;
+    left: 210px;
+    color: white;
+    cursor: pointer;
+}
+#deletebackImg{
+    z-index: 1001;
+    position: absolute;
+    top: 100px;
+    left: 260px;
+    color: white;
+    cursor: pointer;
+}
+
+#changeprofileImg{
+    z-index: 1001;
+    position: absolute;
+    top: 54px;
+    left: 40px;
+    color: white;
+    cursor: pointer;
+}
+#deleteprofileImg{
+    z-index: 1001;
+    position: absolute;
+    top: 60px;
+    left: 80px;
+    color: white;
+    cursor: pointer;
+}
+
+.fadebackImg{
+    width: 600px;
+    height: 250px;
+    top: 0;
+    z-index: 100;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.288);
+}
+.fadeprofileImg{
+    width: 150px;
+    height: 150px;
+    top: 0;
+    z-index: 100;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.288);
+}
+#like span{
+    float: right;
+}
+.heart {
+    background-color: red;
+    display: inline-block;
+    height: 12px;
+    margin: 7px 10px;
+    position: relative;
+    top: 0;
+    transform: rotate(-45deg);
+    width: 12px;
+  }
+  
+  .heart:before,
+  .heart:after {
+    content: "";
+    background-color: red;
+    border-radius: 50%;
+    height: 12px;
+    position: absolute;
+    width: 12px;
+  }
+  
+  .heart:before {
+    top: -6px;
+    left: 0;
+  }
+  
+  .heart:after {
+    left: 6px;
+    top: 0;
+  }
