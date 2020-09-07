@@ -2,6 +2,7 @@ const express = require('express');
 const users = require('../models/users').users;
 const posts = require('../models/posts').posts;
 const follows = require('../models/follows').follows;
+const likedbyusers = require('../models/posts').likedbyusers;
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
@@ -183,7 +184,23 @@ route.post('/post/inc_likes',(req,res)=>{
 
                 if(docs){
                     console.log("Successfully incremented likes and added users_liked");
-                    return res.send(docs);
+                    likedbyusers.findOneAndUpdate({"post_id": req.body.id,"username": req.user.username}, {
+                        $set:{
+                            post_id: req.body.id,
+                            username: req.user.username
+                        }
+                    },{
+                        upsert: true,
+                        setDefaultsOnInsert: true,
+                        new: true
+                    }, function(err,data){
+                        if(err){
+                            console.log("Error in likedbyuser add");
+                            return res.send(undefined);
+                        }
+
+                        return res.send(docs);
+                    })
                 } else {
                     console.log("post not found in /root/post/inc_likes");
                     return res.send(undefined);
@@ -192,8 +209,97 @@ route.post('/post/inc_likes',(req,res)=>{
 
         } else {
             console.log("posts not found in /root/post/inc_likes");
-            res.send(undefined);
+            return res.send(undefined);
         }
+    })
+})
+
+//apis to decrement likes
+route.post('/post/dec_likes',(req,res)=>{
+    
+    function remove(arr, username) {
+        return arr.filter(e => e.username !== username);
+    }
+
+    posts.findById(req.body.id , (err,docs)=>{
+        if(err){
+            console.log("error in /root/post/dec_likes");
+            return res.send(undefined);
+        }
+
+        if(docs){
+            let likes;
+            if(docs.Likes)
+                likes = parseInt(docs.Likes);
+            else 
+                likes = 0;
+
+            if(likes != 0)
+                likes-= 1;
+            
+            let Users_liked = docs.users_liked;
+            if(req.user)
+                Users_liked = remove(Users_liked, req.user.username);
+            else
+                return res.send(undefined);
+
+
+            posts.findOneAndUpdate({"_id": docs._id}, {
+                $set: {
+                    Likes: likes,
+                    users_liked: Users_liked
+                }
+            }, {
+                new: true
+            }, (err,docs)=>{
+                if(err){
+                    console.log("error while updating in /root/post/dec_likes");
+                    return res.send(undefined);
+                }
+
+                if(docs){
+                    console.log("Successfully decremented likes and added users_liked");
+                    likedbyusers.findOneAndRemove({"post_id": req.body.id,"username": req.user.username},
+                    (err)=>{
+                        if(err){
+                            console.log("Error while decremented like");
+                            return res.send(undefined);
+                        }
+                        return res.send(docs);
+                    })
+                } else {
+                    console.log("post not found in /root/post/inc_likes");
+                    return res.send(undefined);
+                }
+            })
+
+        } else {
+            console.log("posts not found in /root/post/inc_likes");
+            return res.send(undefined);
+        }
+    })
+})
+
+
+//api to get all liked post by a particular user
+route.post("/user/liked/posts", (req,res)=>{
+    likedbyusers.aggregate([
+        {"$match": { "username": req.body.username }},
+        {
+            $lockup: {
+                from: "posts", 
+                localField: "post_id",
+                foreignField: "_id",
+                as: "user_posts"
+            }
+        }
+    ]).exec(function(err,docs){
+        if(err){
+            console.log("Error in likedbyusers joining");
+            return res.send(undefined);
+        }
+
+        return res.send(docs);
     })
 })
 
@@ -254,7 +360,10 @@ route.post('/post/add_comments',(req,res)=>{
 })
 
 
-//api 
+//api to get the post liked by the user
+route.get('/liked_by_user',(req,res)=>{
+
+})
 
 
 //api to render profile or profile view page

@@ -7,6 +7,17 @@ var CounterSchema = Schema({
 });
 var counter = mongoose.model('counter', CounterSchema);
 
+const likedbyuser = new Schema({
+    username: {
+        type: String,
+        required: true
+    },
+    post_id: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    }
+})
+var likedbyusers = mongoose.model('likebyuser',likedbyuser);
 
 const reply = new Schema({
     username: {
@@ -73,7 +84,8 @@ post.pre('save', function(next) {
 const posts = mongoose.model('post',post);
 
 module.exports = {
-    posts
+    posts,
+    likedbyusers
 };
 
 
