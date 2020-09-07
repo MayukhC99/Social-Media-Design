@@ -325,6 +325,49 @@ route.get('/followers',(req,res)=>{
     });
 })
 
+route.post('/replies_of_comment',(req,res)=>{
+    posts.findById(req.body.post_id,function(err,docs){
+        if(err){
+            console.log('Error occured in /profile/all_posts_individual');
+            console.log(err);
+            return res.send(undefined);
+        }
+
+        if(docs){
+            console.log("posts found in /profile/all_posts_individual");
+            let replies;
+            docs.comments.map(item=>{
+                if(item._id == req.body.comment_id){
+                    replies = item.replies;
+                }
+            })
+            return res.send(replies);
+        } else {
+            console.log("No Posts");
+            return res.send(undefined);
+        }
+    })
+})
+
+//api to get single post
+route.post('/one_post',(req,res)=>{
+    posts.findById(req.body.id,function(err,docs){
+        if(err){
+            console.log('Error occured in /profile/all_posts_individual');
+            console.log(err);
+            return res.send(undefined);
+        }
+
+        if(docs){
+            console.log("posts found in /profile/all_posts_individual");
+            return res.send(docs);
+        } else {
+            console.log("No Posts");
+            return res.send(undefined);
+        }
+    })
+});
+
 //api to get individual posts
 route.post('/all_posts_individual',(req,res)=>{
     posts.find({username: req.body.username},function(err,docs){

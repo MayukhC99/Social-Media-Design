@@ -311,7 +311,7 @@
     background-color: red;
     display: inline-block;
     height: 12px;
-    margin: 7px 10px;
+    margin: 8px 10px;
     position: relative;
     top: 0;
     transform: rotate(-45deg);
@@ -337,3 +337,61 @@
     left: 6px;
     top: 0;
   }
+  .commentsSection{
+      display: none;
+  }
+  .commentsSection .addcomment{
+      margin-top: 5px;
+      width: 100%;
+      height: 33px;
+      border-radius: 25px;
+      overflow-y: hidden;
+      resize: none;
+  }
+  .commentsSection .addcomment:focus{
+      box-shadow: none;
+      outline: none;
+  }
+  .commentsSection header{
+    font-weight: bold;
+    font-size: large;
+    padding: 10px;
+}
+
+.commentWritten img{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: fill;
+    overflow: hidden;
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+.commentWritten a{
+    color: black;
+    font-size: medium;
+    font-weight: 500;
+}
+.commentWritten p{
+    padding-left: 45px;
+}
+.commentWritten .reactions{
+    margin-top: -20px;
+}
+.commentWritten .replies{
+    margin-top: 15px;
+    padding-left: 85px;
+}
+.replies .loadreply, .commentWritten .loadcomments{
+    color: rgb(119, 119, 235);
+    border: none;
+    padding-left: 45px;
+    background-color: white;
+}
+.replies .loadreply:hover, .commentWritten .loadcomments:hover{
+    text-decoration: underline;
+}
+.replies .loadreply:focus, .commentWritten .loadcomments:focus{
+    outline: none;
+    box-shadow: none;
+}

@@ -9,6 +9,10 @@ var counter = mongoose.model('counter', CounterSchema);
 
 
 const reply = new Schema({
+    username: {
+        type: String,
+        required: true
+    },
     text: {
         type: String,
         required: true
@@ -17,6 +21,10 @@ const reply = new Schema({
 });
 
 const comment = new Schema({
+    username: {
+        type: String,
+        required: true
+    },
     text: {
         type: String,
         required: true

@@ -161,7 +161,11 @@ route.post('/post/inc_likes',(req,res)=>{
             else 
                 likes = 0;
             let Users_liked = docs.users_liked;
-            Users_liked.push({"username": req.user.username}); //appending user that liked
+
+            if(req.user)
+                Users_liked.push({"username": req.user.username}); //appending user that liked
+            else
+                return res.send(undefined);
             likes+= 1; //incrementint likes by 1
 
             posts.findOneAndUpdate({"_id": docs._id}, {
@@ -248,6 +252,9 @@ route.post('/post/add_comments',(req,res)=>{
         }
     })
 })
+
+
+//api 
 
 
 //api to render profile or profile view page

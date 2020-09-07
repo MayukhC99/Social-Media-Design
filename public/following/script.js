@@ -214,7 +214,7 @@ $(document).ready(function(){
             var one = one_name.split(' ')[2];
             var space = $("." + one + " .username").text();
             var user_name = $.trim(space);
-            $.post(`/profile/user/unfollow`, { username: user_name } , (data) => {
+            $.post(`/root/user/unfollow`, { username: user_name } , (data) => {
                 if(data === "success"){
                     setTimeout(location.reload.bind(location), 200);
                 }
