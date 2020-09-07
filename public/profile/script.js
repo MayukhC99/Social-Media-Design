@@ -210,4 +210,5 @@ $(document).ready(function(){
             }
         })
     })
+    $('.loading-screen').fadeOut();
 })

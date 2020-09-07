@@ -1,3 +1,5 @@
+// $.ajaxSetup({async: false});
+
 $(document).ready(function(){
     var textarea = document.getElementById('writepost');
     var theImageField = document.getElementById('theImageField');
@@ -166,5 +168,6 @@ $(document).ready(function(){
         }
     })
 
+    $('.loading-screen').fadeOut();
 
 })

@@ -207,11 +207,12 @@ route.post('/post/likes_check',(req,res)=>{
             console.log(Users_liked);
             let value = 0;
 
-            Users_liked.map(val=>{
-                if(val.username == req.user.username){
-                    value = 1;
-                }
-            })
+            if(req.user)
+                Users_liked.map(val=>{
+                    if(val.username == req.user.username){
+                        value = 1;
+                    }
+                })
             if(value == 1)
                 return res.send(true);
             else

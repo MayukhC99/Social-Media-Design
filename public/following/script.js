@@ -1,6 +1,7 @@
 
 $(document).ready(function(){
     let prev_nav_flag = $('.navbar-nav li:first-child');
+    $('.loading-screen').fadeOut();
 
     $(".navbar-nav li a, .followers, .following_others").click(function(e){
         let class_name = $(this).attr('class').split(' ');

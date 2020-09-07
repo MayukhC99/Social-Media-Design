@@ -64,11 +64,40 @@ $(document).ready(function(){
         let id = $(this).parent().attr('data-id');
         let classname = $(this).attr('class').split(' ')[0];
         if(classname != 'heart'){
-            $.post('/root/post/inc_likes', {id: id}, (data)=>{
-                console.log(data);
-                let value = $(this).parent().attr('class').split(' ')[1];
-                $('.' + value).html('<span class="heart float-right"></span>');
+            $.get('/root/verify_user',(user)=>{
+                if(user){
+                    $.post('/root/post/inc_likes', {id: id}, (data)=>{
+                        console.log(data);
+                        let value = $(this).parent().attr('class').split(' ')[1];
+                        $('.' + value).html('<span class="heart float-right"></span>');
+                    })
+                }
+                else 
+                    window.location.assign('../login/');
             })
         }
     })
+
+    $.get("/root/verify_user",function(data){
+        let sidebar = $('#sidebar');
+
+        if(data){
+            let str = `<a style="color: black; text-decoration: none;" href="/"><li ><i class="fa fa-home"></i> <span>Home</span></li></a>
+            <a style="color: black; text-decoration: none;" href="./"><li class="active"><i class="fa fa-hashtag"></i> <span>Explore</span></li></a>
+            <a style="color: black; text-decoration: none;" href="/login/logout"><li ><i class="fa fa-sign-out"></i> <span>Logout</span></li></a>
+            <a style="color: black; text-decoration: none;" href="/root/${data}"><li ><i class="fa fa-user"></i> <span>Profile</span></li></a>
+            <a style="color: black; text-decoration: none;" href="../following/"><li ><i class="fa fa-users"></i> <span>followings</span></li></a>`;
+            
+            sidebar.html(str);
+
+        } else {
+            let str = `<a style="color: black; text-decoration: none;" href="/"><li ><i class="fa fa-home"></i> <span>Home</span></li></a>
+            <a style="color: black; text-decoration: none;" href="./"><li class="active"><i class="fa fa-hashtag"></i> <span>Explore</span></li></a>
+            <a style="color: black; text-decoration: none;" href="../login/"><li ><i class="fa fa-sign-in"></i> <span>Login</span></li></a>
+            <a style="color: black; text-decoration: none;" href="../login/signup.html"><li ><i class="fa fa-user-plus"></i> <span>Signup</span></li></a>`;
+            
+            sidebar.html(str);
+        }
+    });
+    $('.loading-screen').fadeOut();
 })
