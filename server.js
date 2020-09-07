@@ -12,7 +12,7 @@ dotenv.config({path: "./config/config.env"});
 require('./config/connection_db').connect_with_MongoDB();
 
 const app = express();
-let port = process.env.PORT || 3000;
+let port = process.env.PORT || 5000;
 
 //decrypting json and urlencoded
 app.use(express.json());
