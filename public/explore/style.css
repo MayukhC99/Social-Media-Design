@@ -10,8 +10,7 @@
     color: skyblue;
 }
 .leftnavbar ul{
-    position: -webkit-sticky; /* Safari */
-    position: sticky;
+    position: fixed;
     top: 45px;
     overflow-y: auto;
     margin-left: -40px;
@@ -47,11 +46,91 @@
     top: 0;
     z-index: 10;
     background-color: white;
-    font-weight: bold;
-    font-size: larger;
     padding: 10px 0 10px 10px;
     margin-left: -15px;
     width: calc(100% + 30px);
+}
+
+.main header i{
+    font-size: larger;
+    color: rgb(138, 138, 138);
+    cursor: pointer;
+}
+
+.main header span{
+    padding-left: 20px;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.main .backgroundImg{
+    width: auto;
+    height: 250px;
+    overflow: hidden;
+}
+
+.main .backgroundImg img{
+    width: auto;
+    height: auto;
+    max-width: 900px;
+    max-height: 900px;
+    margin-top: -5%;
+    margin-left: -10%;
+}
+
+.main .profileImg{
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 200px;
+    left: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 7px solid white;
+}
+
+.main .profileImg img{
+    height: auto;
+    width: auto;
+    margin-left: -30%;
+    max-height: 300px;
+    max-width: 300px;
+}
+
+.main .mydetails{
+    margin-top: 55px;
+}
+
+.main .mydetails #name{
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.mydetails #username{
+    color: rgb(83, 83, 218);
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.mydetails #bio{
+    margin-top: 10px;
+}
+
+.mydetails .followcount{
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.followcount a{
+    color: black;
+}
+
+.navbar{
+    margin-top: 20px;
+}
+
+.navbar ul li{
+    width: 160px;
 }
 
 .main .mypost{
@@ -105,107 +184,156 @@
     cursor: pointer;
 }
 
-.createpost{
-    height: auto;
-}
-.createpost input{
-    border: none;
-    outline: none;
-}
-.fa-image{
-    color: gray;
-}
-.mypic{
-    margin: 0;
-    padding-right: 0;
-}
-.mypic img{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: fill;
-    overflow: hidden;
-    background-color: whitesmoke;
-    cursor: pointer;
-}
-textarea{
-    border: none;
-    height: auto;
-    overflow-y: hidden;
-    resize: none;
-    margin-bottom: 10px;
+.main #editprofile, .main #followuser{
+    color: rgb(78, 154, 184);
+    border-color: rgb(78, 154, 184);
+    border-radius: 25px;
 }
 
-textarea:focus{
+.main #followinguser{
+    color: white;
+    background-color: rgb(19, 89, 117);
+    border-radius: 25px;
+}
+
+.main #followinguser:focus{
+    box-shadow: none;
+    outline: none;
+}
+
+.main #followinguser:hover{
+    background-color: red;
+}
+
+.main #editprofile:focus, .main #followuser:focus{
     outline: none;
     box-shadow: none;
 }
 
-.postsection{
-    border-bottom: 10px solid rgb(235, 222, 222);
+.main #editprofile:hover, .main #followuser:hover{
+    background-color: rgb(223, 240, 247);
 }
-#makepost{
-    float: right;
-    height: 35px;
-    width: 70px;
-    border-radius: 25px;
-    border: none;
-    padding-top: 5px;
-    font-weight: 700;
-    text-align: center;
-    background-color: skyblue;
-    color: white;
-}
-#makepost:focus{
-    outline: none;
-}
-#postimgfield{
-    max-width: 500px;
-    max-height: 300px;
+
+#profilemodal .backgroundImg{
+    width: auto;
+    height: 250px;
     overflow: hidden;
-    border-radius: 15px;
-    margin-bottom: 10px;
 }
-#imgupload{
+
+#profilemodal .backgroundImg img{
     width: auto;
     height: auto;
-    max-width: 700px;
-    max-height: 700px;
+    max-width: 900px;
+    max-height: 900px;
     margin-top: -5%;
     margin-left: -10%;
-    overflow: hidden;
-}
-#deleteimg{
-    position: absolute;
-    background-color: black;
-    top: 55px;
-    left: 20px;
-    color: white;
-    line-height: 50px;
-    margin-right: 20px;
-    cursor: pointer;
-    display: none;
-    margin-top: 10px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-}
-#deleteimg:focus{
-    outline: none;
-    box-shadow: none;
-}
-#deleteimg span{
-    width: 20px;
-    height: 3px;
-    margin: 0 auto;
-    display: block;
-    background: white;
-    transition: all 0.8s cubic-bezier(0.810, -0.330, 0.345, 1.375);
 }
 
-#deleteimg span:first-child{
-    transform: rotate(-45deg) translate(-4px, 1px);
+#profilemodal .profileImg{
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 160px;
+    left: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 101;
+    border: 7px solid white;
 }
-#deleteimg span:last-child{
-    transform: rotate(46deg) translate(-1px, 1px);
+
+#profilemodal .profileImg img{
+    height: auto;
+    width: auto;
+    margin-left: -30%;
+    max-height: 300px;
+    max-width: 300px;
 }
+
+#profilemodal .modal-body{
+    padding-top: 0;
+    overflow-x: hidden;
+}
+
+#changebackImg{
+    z-index: 1001;
+    position: absolute;
+    top: 95px;
+    left: 210px;
+    color: white;
+    cursor: pointer;
+}
+#deletebackImg{
+    z-index: 1001;
+    position: absolute;
+    top: 100px;
+    left: 260px;
+    color: white;
+    cursor: pointer;
+}
+
+#changeprofileImg{
+    z-index: 1001;
+    position: absolute;
+    top: 54px;
+    left: 40px;
+    color: white;
+    cursor: pointer;
+}
+#deleteprofileImg{
+    z-index: 1001;
+    position: absolute;
+    top: 60px;
+    left: 80px;
+    color: white;
+    cursor: pointer;
+}
+
+.fadebackImg{
+    width: 600px;
+    height: 250px;
+    top: 0;
+    z-index: 100;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.288);
+}
+.fadeprofileImg{
+    width: 150px;
+    height: 150px;
+    top: 0;
+    z-index: 100;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.288);
+}
+#like span{
+    float: right;
+}
+.heart {
+    background-color: red;
+    display: inline-block;
+    height: 12px;
+    margin: 7px 10px;
+    position: relative;
+    top: 0;
+    transform: rotate(-45deg);
+    width: 12px;
+  }
+  
+  .heart:before,
+  .heart:after {
+    content: "";
+    background-color: red;
+    border-radius: 50%;
+    height: 12px;
+    position: absolute;
+    width: 12px;
+  }
+  
+  .heart:before {
+    top: -6px;
+    left: 0;
+  }
+  
+  .heart:after {
+    left: 6px;
+    top: 0;
+  }

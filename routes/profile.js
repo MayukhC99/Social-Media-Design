@@ -326,8 +326,8 @@ route.get('/followers',(req,res)=>{
 })
 
 //api to get individual posts
-route.get('/all_posts_individual',(req,res)=>{
-    posts.find({username: req.user.username},function(err,docs){
+route.post('/all_posts_individual',(req,res)=>{
+    posts.find({username: req.body.username},function(err,docs){
         if(err){
             console.log('Error occured in /profile/all_posts_individual');
             console.log(err);
@@ -346,7 +346,7 @@ route.get('/all_posts_individual',(req,res)=>{
 
 //api to get all post in reverse chronological order
 route.get('/all_posts_explore',(req,res)=>{
-    posts.find({}).sort({updatedAt: 'desc'}).exec(function(err, docs) { 
+    posts.find({}).sort({'updatedAt': -1}).exec(function(err,docs) { 
         if(err){
             console.log('Error occured in /profile/all_posts_explore');
             console.log(err);

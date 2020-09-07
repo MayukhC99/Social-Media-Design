@@ -157,7 +157,7 @@ route.post('/post/inc_likes',(req,res)=>{
         if(docs){
             let likes = parseInt(docs.Likes);
             let Users_liked = docs.users_liked;
-            Users_liked.append({"username": req.user.username}); //appending user that liked
+            Users_liked.push({"username": req.user.username}); //appending user that liked
             likes+= 1; //incrementint likes by 1
 
             posts.findOneAndUpdate({"_id": docs._id}, {
@@ -200,8 +200,15 @@ route.post('/post/likes_check',(req,res)=>{
 
         if(docs){
             let Users_liked = docs.users_liked;
+            console.log(Users_liked);
+            let value = 0;
 
-            if(Users_liked.indexOf({"username": req.user.username}) != -1)
+            Users_liked.map(val=>{
+                if(val.username == req.user.username){
+                    value = 1;
+                }
+            })
+            if(value == 1)
                 return res.send(true);
             else
                 return res.send(false);
