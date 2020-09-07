@@ -40,11 +40,13 @@
 .main{
     border: 1px solid rgb(235, 222, 222);
 }
-.main header{
+.main #home{
     position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 0;
     z-index: 10;
+    font-weight: bold;
+    font-size: larger;
     background-color: white;
     padding: 10px 0 10px 10px;
     margin-left: -15px;
@@ -136,6 +138,12 @@
 .main .mypost{
     padding-top: 10px;
     border-bottom: 1px solid rgb(235, 222, 222);
+}
+
+.main .mypost .imgtag{
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px solid gray;
 }
 
 .main .mypost .imgtag img{
@@ -382,16 +390,16 @@
     margin-top: 15px;
     padding-left: 85px;
 }
-.replies .loadreply, .commentWritten .loadcomments{
+.replies .loadreply, .commentsSection .loadcomments{
     color: rgb(119, 119, 235);
     border: none;
     padding-left: 45px;
     background-color: white;
 }
-.replies .loadreply:hover, .commentWritten .loadcomments:hover{
+.replies .loadreply:hover, .commentsSection .loadcomments:hover{
     text-decoration: underline;
 }
-.replies .loadreply:focus, .commentWritten .loadcomments:focus{
+.replies .loadreply:focus, .commentsSection .loadcomments:focus{
     outline: none;
     box-shadow: none;
 }

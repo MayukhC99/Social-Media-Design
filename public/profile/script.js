@@ -4,11 +4,15 @@ $(document).ready(function(){
     window.card = '';
     let profileImgField = document.getElementById('profileImgField');
     let username = window.location.href.split('/');
+    var theErrorMessage = document.querySelector('#errorMessage');
+    var theSuccessMessage = document.querySelector('#successMessage');
     console.log(username[username.length - 1]);
     $.post("/profile/get_details", {username: username[username.length - 1].trim()}, function(data) {
         userdata = data;
         console.log(data);
-        $(".profileImg img").attr('src', `../uploads/${data.profile_picture}`)
+        $(".profileImg img").attr('src', `../uploads/${data.profile_picture}`);
+        $(".backgroundImg img").attr('src', `../uploads/${data.profile_picture}`)
+        $(".main #toper span").html(data.first_name + ' ' + data.last_name);
         $(".mydetails #name").html(data.first_name + ' ' + data.last_name);
         $(".mydetails #username").html('@' + data.username);
         let calender = ['January', 'February', 'March', 'April', 'May', 'Jun', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -57,15 +61,18 @@ $(document).ready(function(){
         })
         $.post('/profile/all_posts_individual', {username: username[username.length - 1].trim()}, (data)=>{
             let size = data.length;
+            if(size == 0){
+                $(".main .mypost").html('<h3>No Post Created</h3>');
+            }
             for(let i = 0; i < size; i++){
                 let new_card = '';
                 $.post('/root/post/likes_check', {id: data[i]._id}, (res) =>{
                     let value = '';
                     let image = '';
                     if(res == true)
-                        value = '<span class="heart float-right"></span>';
+                        value = '<span class="heart float-right likebutton"></span>';
                     else{
-                        value = `<span class="material-icons">
+                        value = `<span class="material-icons float-right likebutton">
                             favorite_border
                         </span>`;
                     }
@@ -82,16 +89,19 @@ $(document).ready(function(){
                     </div>
                     <div class="reactions">
                         <div class="row">
-                            <div class="col-3 l${i}" id="like" data-id=${data[i]._id}>
+                            <div class="col-4 l${i}" id="like" data-id=${data[i]._id}>
                                 ${value}
+                                <span class="likednumber float-right pr-2">${data[i].Likes}</span>
                             </div>
-                            <div class="col-3" id="comment">
-                                <i class="fa fa-comment-o fa-lg float-right"></i>
-                            </div>
-                            <div class="col-3" id="share">
-                                <i class="fa fa-share fa-lg float-right"></i>
+                            <div class="col-4" id="comment">
+                                <i class="fa fa-comment-o fa-lg float-right" data-id=${data[i]._id}></i>
+                                <span class="likednumber float-right pr-2">${data[i].comments.length}</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="commentsSection cs${data[i]._id}">
+                        <textarea class="col-12 addcomment" placeholder="Add your Comment"></textarea>
+                        <header>Comments</header>
                     </div>`;
                     $(".main .mypost").append(new_card);
                 })
@@ -99,7 +109,114 @@ $(document).ready(function(){
         })
     })
 
-    $(document).on('click', ".main .mypost .reactions div span", function(){
+    $(document).on('click', ".main .mypost .reactions div i", function(){
+        $.post('/profile/one_post', {id: $(this).attr('data-id')}, (data) =>{
+            let classname = '.cs' + $(this).attr('data-id');
+            let commentsize = data.comments.length;
+            let morecomments = '';
+            if(commentsize > 5){
+                commentsize = 5;
+                morecomments += `<button class="loadcomments" data-show="5">show more comments</button>`;
+            }
+            for(let j = 0; j < commentsize; j++){
+                $.post(`/profile//get_details`, {username: data.comments[j].username}, (commenteduser)=>{
+                    console.log(commenteduser);
+                    let arr = '';
+                    arr = `<div class="commentWritten">
+                        <img src="../uploads/${commenteduser.profile_picture}">
+                        <a href="/root/${commenteduser.username}">${commenteduser.first_name} ${commenteduser.last_name}</a>
+                        <p>${data.comments[j].text}</p>
+                    </div>`;
+                    $(classname).append(arr);
+                })
+            }
+            console.log(morecomments);
+            $(classname).append(morecomments);
+            $(classname).show();
+        })
+    })
+
+    $(document).on('click', '.main .mypost .commentsSection .loadcomments', function(){
+        let classname = $(this).parent().attr('class').split(' ')[1];
+        let id = classname.split('cs')[1];
+        $.post('/profile/one_post', {id: id}, (data) =>{
+            console.log(data);
+            let size = data.comments.length;
+            let start = parseInt($(this).attr('data-show'), 10);
+            let finish = 0;
+            let morecomments = '';
+            if(size - start > 5){
+                finish = start + 5
+                morecomments += `<button class="loadcomments" data-show="${finish}">show more comments</button>`;
+            }
+            else{
+                finish = size;
+            }
+            console.log(start, finish)
+            for(let j = start; j < finish; j++){
+                console.log(data.comments[j].username)
+                $.post(`/profile//get_details`, {username: data.comments[j].username}, (commenteduser)=>{
+                    console.log(commenteduser);
+                    let arr = '';
+                    arr = `<div class="commentWritten">
+                        <img src="../uploads/${commenteduser.profile_picture}">
+                        <a href="/root/${commenteduser.username}">${commenteduser.first_name} ${commenteduser.last_name}</a>
+                        <p>${data.comments[j].text}</p>
+                    </div>`;
+                    console.log(arr);
+                    $('.' + classname).append(arr);
+                })
+            }
+            $(this).remove();
+            console.log(morecomments);
+            $('.' + classname).append(morecomments);
+        })
+    })
+
+    $(document).on('keyup', '.main .mypost .commentsSection .addcomment', function(e){
+        if(e.keyCode === 13){
+            let classname = $(this).parent().attr('class').split(' ')[1];
+            let id = classname.split('cs')[1];
+            console.log(id, classname);
+            $.post('/profile/one_post', {id: id}, (data) =>{
+                $.get('/root/get_username', (user)=>{
+                    let val = $(this).val();
+                    let size = data.comments.length;
+                    data.comments.push({username: user,text: val})
+                    let comments = JSON.stringify(data.comments)
+                    console.log(val, comments);
+                    $(this).val('');
+                    $.post('/root/post/add_comments', {id: id, comments: comments}, (data)=>{
+                        console.log(data);
+                        $.post('/profile/get_details', {username: user}, (commenteduser)=>{
+                            if(data.comments.length < 5){
+                                let comment = '';
+                                comment = `<div class="commentWritten">
+                                    <img src="../uploads/${commenteduser.profile_picture}">
+                                    <a href="/root/${commenteduser.username}">${commenteduser.first_name} ${commenteduser.last_name}</a>
+                                    <p>${val}</p>
+                                </div>`;
+                                $('.' + classname).append(comment);
+                            }
+                            else{
+                                let classes = $(this).parent().attr('class').split(' ')[1];
+                                let data_show = $("." + classes + " .loadcomments").attr('data-show');
+                                console.log(classes);
+                                console.log(data_show);
+                                $(".loadcomments").remove();
+                                if(data_show != undefined)
+                                    $('.' + classname).append(`<button class="loadcomments" data-show="${data_show}">show more comments</button>`);
+                                else
+                                    $('.' + classname).append(`<button class="loadcomments" data-show="${size}">show more comments</button>`);
+                            }
+                        })
+                    })
+                })
+            })
+        }
+    });
+
+    $(document).on('click', ".main .mypost .reactions div .likebutton", function(){
         let id = $(this).parent().attr('data-id');
         let classname = $(this).attr('class').split(' ')[0];
         if(classname != 'heart'){
@@ -163,6 +280,7 @@ $(document).ready(function(){
         if (file.size > 1000000) {
             $('#errorMessage').show();
             $('#errorMessage').html('File too large, cannot be more than 1MB...<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+            alert('File too large, cannot be more than 1MB...');
             return false;
         }
 
@@ -171,6 +289,7 @@ $(document).ready(function(){
         } else {
             $('#errorMessage').show();
             $('#errorMessage').html('File type should be png or jpg/jpeg...<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+            alert('File type should be png or jpg/jpeg...');
             return false;
         }
     }
@@ -178,11 +297,54 @@ $(document).ready(function(){
     function handleUploadedFile(file) {
         fileName = file.name;
         var image = document.getElementById("propic");
+        var image2 = document.getElementById("backpic");
         image.file = file;
+        image2.file = file;
         var reader = new FileReader();
         reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(image);
         reader.readAsDataURL(file);
+        var reader2 = new FileReader();
+        reader2.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(image2);
+        reader2.readAsDataURL(file);
     }
+
+    $('#deleteprofileImg').click(function(){
+        var message = confirm("Are you sure you want to reset your current photo?");
+        if(message == true){
+            $('#errorMessage').hide();
+            $('#successMessage').hide();
+            $.get('/profile/delete/profile_image',(res)=>{
+                if(res !== "undefined"){
+                    window.location.reload();
+                }
+            })
+        }
+    })
+
+    $(document).on('click', '.alert .close', function(){
+        $(".alert").hide();
+    })
+
+    let prev_nav = mypost;
+
+    $(".main .navbar ul li").on('click', function(e){
+        if(!$(this).hasClass('active')){
+            if(prev_nav == mypost){
+                $(".main .navbar ul li:first-child").removeClass('active');
+                $(this).addClass('active');
+                $(`.main .mypost`).hide();
+                prev_nav = liked_post;
+                $(`.main .liked_post`).show();
+            }
+            else{
+                $(".main .navbar .nav-tabs li:last-child").removeClass('active');
+                $(this).addClass('active');
+                $(`.main .liked_post`).hide();
+                prev_nav = mypost;
+                $(`.main .mypost`).show();
+            }
+        }
+    })
 
     $("#update").on('click', function(){
         let formData = new FormData(document.getElementById('updateProfile'));
@@ -201,7 +363,7 @@ $(document).ready(function(){
                         first_name: formData.get('first_name'), 
                         last_name: formData.get('last_name')
                     }, (data) =>{
-                        $("#profilemodal").modal('toggle');
+                        location.reload();
                     })
                 }
                 else{
@@ -211,23 +373,27 @@ $(document).ready(function(){
         })
     })
 
+    $(".main #toper i").on('click', function(){
+        window.history.back();
+    })
+
     $.get("/root/verify_user",function(data){
         let sidebar = $('#sidebar');
 
         if(data){
-            let str = `<a style="color: black; text-decoration: none;" href="/"><li ><i class="fa fa-home"></i> <span>Home</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../explore/"><li ><i class="fa fa-hashtag"></i> <span>Explore</span></li></a>
-            <a style="color: black; text-decoration: none;" href="/login/logout"><li ><i class="fa fa-sign-out"></i> <span>Logout</span></li></a>
-            <a style="color: black; text-decoration: none;" href="/root/${data}"><li class="active"><i class="fa fa-user"></i> <span>Profile</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../following/"><li ><i class="fa fa-users"></i> <span>followings</span></li></a>`;
+            let str = `<a style="color: black; text-decoration: none;" href="/"><li ><i class="fa fa-home"></i> <span class="d-none d-lg-inline">Home</span></li></a>
+            <a style="color: black; text-decoration: none;" href="../explore/"><li ><i class="fa fa-hashtag"></i> <span class="d-none d-lg-inline">Explore</span></li></a>
+            <a style="color: black; text-decoration: none;" href="/login/logout"><li ><i class="fa fa-sign-out"></i> <span class="d-none d-lg-inline">Logout</span></li></a>
+            <a style="color: black; text-decoration: none;" href="/root/${data}"><li class="active"><i class="fa fa-user"></i> <span class="d-none d-lg-inline">Profile</span></li></a>
+            <a style="color: black; text-decoration: none;" href="../following/"><li ><i class="fa fa-users"></i> <span class="d-none d-lg-inline">followings</span></li></a>`;
             
             sidebar.html(str);
 
         } else {
-            let str = `<a style="color: black; text-decoration: none;" href="/"><li ><i class="fa fa-home"></i> <span>Home</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../explore/"><li ><i class="fa fa-hashtag"></i> <span>Explore</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../login/"><li ><i class="fa fa-sign-in"></i> <span>Login</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../login/signup.html"><li ><i class="fa fa-user-plus"></i> <span>Signup</span></li></a>`;
+            let str = `<a style="color: black; text-decoration: none;" href="/"><li ><i class="fa fa-home"></i> <span class="d-none d-lg-inline">Home</span></li></a>
+            <a style="color: black; text-decoration: none;" href="../explore/"><li ><i class="fa fa-hashtag"></i> <span class="d-none d-lg-inline">Explore</span></li></a>
+            <a style="color: black; text-decoration: none;" href="../login/"><li ><i class="fa fa-sign-in"></i> <span class="d-none d-lg-inline">Login</span></li></a>
+            <a style="color: black; text-decoration: none;" href="../login/signup.html"><li ><i class="fa fa-user-plus"></i> <span class="d-none d-lg-inline">Signup</span></li></a>`;
             
             sidebar.html(str);
         }

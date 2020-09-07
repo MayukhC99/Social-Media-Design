@@ -22,16 +22,18 @@
 
     <div class="container">
         <div class="row allposts">
-            <div class="col-3 leftnavbar">
+            <div class="col-2 col-lg-3 leftnavbar">
                 <header><i class="fa fa-twitter fa-2x"></i></header>
                 <ul id="sidebar">
                 
                 </ul>
             </div>
-            <div class="col-6 main">
-                <header><i class="fa fa-arrow-left"></i> <span>Sachin Tendulkar</span></header>
+            <div class="col-10 col-lg-6 main">
+                <div class="alert alert-danger alert-dismissible fade show" id="errorMessage" role="alert"></div>
+                <div class="alert alert-success alert-dismissible fade show hide" id="successMessage" role="alert"></div>
+                <header id="toper"><i class="fa fa-arrow-left"></i> <span></span></header>
                 <div class="row backgroundImg">
-                    <img src="../uploads/000.png">
+                    <img src="">
                 </div>
                 <div class="profileImg">
                     <img src="">
@@ -47,45 +49,15 @@
                     <span class="followcount" id="followers" style="margin-left: 10px;"></span>
                 </div>
                 <div class="navbar">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                          <a class="nav-link active" href="#">My posts</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="#">Media</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="#">Likes</a>
-                        </li>
+                    <ul class="nav nav-tabs col-12">
+                        <li class="nav-item text-center col-6 active"><b>Posts</b></li>
+                        <li class="nav-item text-center col-6"><b>Likes</b></li>
                     </ul>
                 </div>
                 <div class="content">
-                    <div class="mypost">
-                        <div class="imgtag">
-                            <img src="">
-                            <a href="#">Sachin Tendulkar</a>
-                        </div>
-                        <p id="caption">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                        <div class="postimg">
-                            <img src="../uploads/000.png">
-                        </div>
-                        <div class="reactions">
-                            <div class="row">
-                                <div class="col-3" id="like">
-                                    <span class="material-icons">
-                                        favorite_border
-                                    </span>
-                                    <!-- <span class="heart float-right"></span> -->
-                                </div>
-                                <div class="col-3" id="comment">
-                                    <i class="fa fa-comment-o fa-lg float-right"></i>
-                                </div>
-                                <div class="col-3" id="share">
-                                    <i class="fa fa-share fa-lg float-right"></i>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mypost" id="mypost">
                     </div>
+                    <div class="liked_post" id="liked_post"></div>
                 </div>
             </div>
         </div>
@@ -104,11 +76,8 @@
                     <form id="updateProfile" enctype="multipart/form-data">
                         <div class="row">
                             <div class="row backgroundImg">
-                                <input type="file" name="profile_image" id="backImgField" style="display: none;">
-                                <label class="btn" for="backImgField" id="changebackImg"><i class="fa fa-camera"></i></label>
-                                <span id="deletebackImg"><i class="fa fa-times fa-lg"></i></span>
                                 <div class="fadebackImg"></div>
-                                <img src="../uploads/000.png">
+                                <img id="backpic" src="../uploads/000.png">
                             </div>
                             <div class="profileImg">
                                 <input type="file" name="profile_image" id="profileImgField" style="display: none;">
