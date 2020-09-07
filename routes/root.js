@@ -155,7 +155,11 @@ route.post('/post/inc_likes',(req,res)=>{
         }
 
         if(docs){
-            let likes = parseInt(docs.Likes);
+            let likes;
+            if(docs.Likes)
+                likes = parseInt(docs.Likes);
+            else 
+                likes = 0;
             let Users_liked = docs.users_liked;
             Users_liked.push({"username": req.user.username}); //appending user that liked
             likes+= 1; //incrementint likes by 1

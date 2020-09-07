@@ -346,7 +346,7 @@ route.post('/all_posts_individual',(req,res)=>{
 
 //api to get all post in reverse chronological order
 route.get('/all_posts_explore',(req,res)=>{
-    posts.find({}).sort({'updatedAt': -1}).exec(function(err,docs) { 
+    posts.find({}).sort({'order_id': 'desc'}).exec(function(err,docs) { 
         if(err){
             console.log('Error occured in /profile/all_posts_explore');
             console.log(err);
