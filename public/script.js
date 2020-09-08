@@ -147,7 +147,7 @@ $(document).ready(function(){
                                             </span>`;
                                         }
                                         if(!likes_count)
-                                            likes_count = "";
+                                            likes_count = 0;
                                         console.log(i, j);
                     
                                         new_card+= `<div class="imgtag">

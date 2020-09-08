@@ -18,6 +18,9 @@ $(document).ready(function(){
                             success: (res) =>{
                                 let value = '';
                                 let image = '';
+                                let count_likes = data[i].Likes;
+                                if(!count_likes)
+                                    count_likes = 0;
                                 if(res == true)
                                     value = '<span class="heart float-right"></span>';
                                 else{
@@ -40,7 +43,7 @@ $(document).ready(function(){
                                     <div class="row">
                                         <div class="col-4 l${i}" id="like" data-id=${data[i]._id}>
                                             ${value}
-                                            <span class="likednumber float-right pr-2">${data[i].Likes}</span>
+                                            <span class="likednumber float-right pr-2">${count_likes}</span>
                                         </div>
                                         <div class="col-4" id="comment">
                                             <i class="fa fa-comment-o fa-lg float-right" data-id=${data[i]._id}></i>

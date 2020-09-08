@@ -69,6 +69,9 @@ $(document).ready(function(){
                 $.post('/root/post/likes_check', {id: data[i]._id}, (res) =>{
                     let value = '';
                     let image = '';
+                    let likes_count = data[i].Likes;
+                    if(!likes_count)
+                        likes_count = 0;
                     if(res == true)
                         value = '<span class="heart float-right likebutton"></span>';
                     else{
@@ -91,7 +94,7 @@ $(document).ready(function(){
                         <div class="row">
                             <div class="col-4 l${i}" id="like" data-id=${data[i]._id}>
                                 ${value}
-                                <span class="likednumber float-right pr-2">${data[i].Likes}</span>
+                                <span class="likednumber float-right pr-2">${likes_count}</span>
                             </div>
                             <div class="col-4" id="comment">
                                 <i class="fa fa-comment-o fa-lg float-right" data-id=${data[i]._id}></i>
