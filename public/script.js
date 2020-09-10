@@ -103,17 +103,12 @@ $(document).ready(function(){
             <a style="color: black; text-decoration: none;" href="./explore/"><li ><i class="fa fa-hashtag"></i> <span class="d-none d-lg-inline">Explore</span></li></a>
             <a style="color: black; text-decoration: none;" href="/login/logout"><li ><i class="fa fa-sign-out"></i> <span class="d-none d-lg-inline">Logout</span></li></a>
             <a style="color: black; text-decoration: none;" href="/root/${data}"><li ><i class="fa fa-user"></i> <span class="d-none d-lg-inline">Profile</span></li></a>
-            <a style="color: black; text-decoration: none;" href="./following/"><li ><i class="fa fa-users"></i> <span class="d-none d-lg-inline">followings</span></li></a>`;
+            <a style="color: black; text-decoration: none;" href="./following/"><li ><i class="fa fa-users"></i> <span class="d-none d-lg-inline">Followings</span></li></a>`;
             
             sidebar.html(str);
 
         } else {
-            let str = `<a style="color: black; text-decoration: none;" href="/"><li class="active" ><i class="fa fa-home"></i> <span class="d-none d-lg-inline">Home</span></li></a>
-            <a style="color: black; text-decoration: none;" href="./explore/"><li ><i class="fa fa-hashtag"></i> <span class="d-none d-lg-inline">Explore</span></li></a>
-            <a style="color: black; text-decoration: none;" href="./login/"><li ><i class="fa fa-sign-in"></i> <span class="d-none d-lg-inline">Login</span></li></a>
-            <a style="color: black; text-decoration: none;" href="./login/signup.html"><li ><i class="fa fa-user-plus"></i> <span class="d-none d-lg-inline">Signup</span></li></a>`;
-            
-            sidebar.html(str);
+            window.location = './login/';
         }
     });
 
@@ -139,12 +134,16 @@ $(document).ready(function(){
                                     success: (res) =>{
                                         let likes_count = data[i]["Posts_of_followers"][j].Likes;
                                         let value = '';
+                                        let image = '';
                                         if(res == true)
                                             value = '<span class="heart float-right likebutton"></span>';
                                         else{
                                             value = `<span class="material-icons float-right likebutton">
                                                 favorite_border
                                             </span>`;
+                                        }
+                                        if(data[i]["Posts_of_followers"][j].image != undefined){
+                                            image = `<img src='../post_assets/${data[i]["Posts_of_followers"][j].image}'>`;
                                         }
                                         if(!likes_count)
                                             likes_count = 0;
@@ -156,17 +155,17 @@ $(document).ready(function(){
                                         </div>
                                         <p class="caption">${data[i]["Posts_of_followers"][j].text}</p>
                                         <div class="postimg">
-                                            <img src="./post_assets/${data[i]["Posts_of_followers"][j].image}">
+                                            ${image}
                                         </div>
                                         <div class="reactions">
                                             <div class="row">
-                                                <div class="col-4 like" data-id=${data[i]["Posts_of_followers"][j]._id}>
+                                                <div class="col-4 l${data[i]["Posts_of_followers"][j]._id} like" data-id=${data[i]["Posts_of_followers"][j]._id}>
                                                     ${value}
                                                     <span class="likednumber float-right pr-2">${likes_count}</span>
                                                 </div>
                                                 <div class="col-4 comment">
                                                     <i class="fa fa-comment-o fa-lg float-right" data-id=${data[i]["Posts_of_followers"][j]._id}></i>
-                                                    <span class="float-right pr-2 commentnumber">${data[i]["Posts_of_followers"][j].comments.length}</span>
+                                                    <span class="commentnumber ln${data[i]["Posts_of_followers"][j]._id} float-right pr-2">${data[i]["Posts_of_followers"][j].comments.length}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -282,6 +281,7 @@ $(document).ready(function(){
                                     <p>${val}</p>
                                 </div>`;
                                 $('.' + classname).append(comment);
+                                $(`.ln${id}`).html(`${data.comments.length}`);
                             }
                             else{
                                 let classes = $(this).parent().attr('class').split(' ')[1];
@@ -293,6 +293,7 @@ $(document).ready(function(){
                                     $('.' + classname).append(`<button class="loadcomments" data-show="${data_show}">show more comments</button>`);
                                 else
                                     $('.' + classname).append(`<button class="loadcomments" data-show="${size}">show more comments</button>`);
+                                $(`.ln${id}`).html(`${data.comments.length}`);
                             }
                         })
                     })
@@ -304,18 +305,27 @@ $(document).ready(function(){
     $(document).on('click', ".main .mypost .reactions div .likebutton", function(){
         let id = $(this).parent().attr('data-id');
         let classname = $(this).attr('class').split(' ')[0];
+        console.log(classname);
         if(classname != 'heart'){
             $.get('/root/verify_user',(user)=>{
                 if(user){
                     $.post('/root/post/inc_likes', {id: id}, (data)=>{
                         console.log(data);
                         let value = $(this).parent().attr('class').split(' ')[1];
-                        $('.' + value).html('<span class="heart float-right"></span>');
+                        $('.' + value).html('<span class="heart float-right likebutton"></span>');
                         $('.' + value).append(`<span class="likednumber float-right pr-2">${data.Likes}</span>`)
                     })
                 }
                 else 
                     window.location.assign('../login/');
+            })
+        }
+        else{
+            $.post('/root/post/dec_likes', {id: id}, (data)=>{
+                console.log(data);
+                let value = $(this).parent().attr('class').split(' ')[1];
+                $('.' + value).html('<span class="material-icons float-right likebutton">favorite_border</span>');
+                $('.' + value).append(`<span class="likednumber float-right pr-2">${data.Likes}</span>`)
             })
         }
     })

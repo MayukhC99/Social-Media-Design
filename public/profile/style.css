@@ -67,7 +67,7 @@
     cursor: pointer;
 }
 
-.main header span{
+.main header{
     padding-left: 20px;
     font-weight: bold;
     font-size: larger;
@@ -142,12 +142,18 @@
     width: 160px;
 }
 
-.main .mypost{
+.main .mypost, .main .liked_post{
     padding-top: 10px;
     border-bottom: 1px solid rgb(235, 222, 222);
 }
 
-.main .mypost .imgtag img{
+.main .mypost .imgtag, .main .liked_post .imgtag{
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px solid gray;
+}
+
+.main .mypost .imgtag img, .main .liked_post .imgtag img{
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -157,27 +163,29 @@
     cursor: pointer;
 }
 
-.main .mypost .imgtag a{
+.main .mypost .imgtag a, .main .liked_post .imgtag a{
     top: 20px;
     color: black;
     font-weight: bold;
 }
 
-.main .mypost .imgtag a:focus{
+.main .mypost .imgtag a:focus, .main .liked_post .imgtag a:focus{
     outline: none;
     box-shadow: none;
 }
 
-.main .mypost .postimg{
+.main .mypost .postimg, .main .liked_post .postimg{
     max-width: 500px;
     max-height: 300px;
     overflow: hidden;
     border-radius: 15px;
 }
 
-.main .mypost .postimg img{
+.main .mypost .postimg img, .main .liked_post .postimg img{
     width: auto;
     height: auto;
+    min-width: 500px;
+    min-height: 300px;
     max-width: 800px;
     max-height: 800px;
     margin-top: -5%;
@@ -185,11 +193,12 @@
     overflow: hidden;
 }
 
-.main .mypost .reactions{
+.main .mypost .reactions, .main .liked_post .reactions{
     padding-top: 15px;
 }
 
-.main .mypost .reactions div i, .main .mypost .reactions div span{
+.main .mypost .reactions div i, .main .mypost .reactions div span,
+.main .liked_post .reactions div i, .main .liked_post .reactions div span{
     cursor: pointer;
 }
 
@@ -382,4 +391,42 @@
 
 #successMessage, #online_status {
     color: green;
+}
+
+.commentWritten img{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: fill;
+    overflow: hidden;
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+.commentWritten a{
+    color: black;
+    font-size: medium;
+    font-weight: 500;
+}
+.commentWritten p{
+    padding-left: 45px;
+}
+.commentWritten .reactions{
+    margin-top: -20px;
+}
+.commentWritten .replies{
+    margin-top: 15px;
+    padding-left: 85px;
+}
+.replies .loadreply, .commentWritten .loadcomments{
+    color: rgb(119, 119, 235);
+    border: none;
+    padding-left: 45px;
+    background-color: white;
+}
+.replies .loadreply:hover, .commentWritten .loadcomments:hover{
+    text-decoration: underline;
+}
+.replies .loadreply:focus, .commentWritten .loadcomments:focus{
+    outline: none;
+    box-shadow: none;
 }

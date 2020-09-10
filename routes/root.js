@@ -286,7 +286,7 @@ route.post("/user/liked/posts", (req,res)=>{
     likedbyusers.aggregate([
         {"$match": { "username": req.body.username }},
         {
-            $lockup: {
+            $lookup: {
                 from: "posts", 
                 localField: "post_id",
                 foreignField: "_id",

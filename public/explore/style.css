@@ -177,6 +177,8 @@
 .main .mypost .postimg img{
     width: auto;
     height: auto;
+    min-width: 500px;
+    min-height: 300px;
     max-width: 800px;
     max-height: 800px;
     margin-top: -5%;

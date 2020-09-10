@@ -80,7 +80,7 @@ $(document).ready(function(){
                         </span>`;
                     }
                     if(data[i].image){
-                        image = `../post_assets/${data[i].image}`;
+                        image = `<img src='../post_assets/${data[i].image}'>`;
                     }
                     new_card += `<div class="imgtag">
                         <img src='../uploads/${userdata.profile_picture}'>
@@ -88,17 +88,17 @@ $(document).ready(function(){
                     </div>
                     <p id="caption">${data[i].text}</p>
                     <div class="postimg">
-                        <img src='${image}'>
+                        ${image}
                     </div>
                     <div class="reactions">
                         <div class="row">
-                            <div class="col-4 l${i}" id="like" data-id=${data[i]._id}>
+                            <div class="col-4 l${data[i]._id}" id="like" data-id=${data[i]._id}>
                                 ${value}
                                 <span class="likednumber float-right pr-2">${likes_count}</span>
                             </div>
                             <div class="col-4" id="comment">
                                 <i class="fa fa-comment-o fa-lg float-right" data-id=${data[i]._id}></i>
-                                <span class="likednumber float-right pr-2">${data[i].comments.length}</span>
+                                <span class="likednumber ln${data[i]._id} float-right pr-2">${data[i].comments.length}</span>
                             </div>
                         </div>
                     </div>
@@ -112,11 +112,67 @@ $(document).ready(function(){
         })
     })
 
-    $(document).on('click', ".main .mypost .reactions div i", function(){
+    $.post('/root/user/liked/posts', {username: username[username.length - 1].trim()}, (data)=>{
+        let size = data.length;
+        if(size == 0){
+            $(".main .liked_post").html('<h3>No Liked Post Available</h3>');
+        }
+        for(let i = 0; i < size; i++){
+            let new_card = '';
+            $.post('/profile/get_details', {username: data[i].user_posts[0].username}, (user)=>{
+                $.post('/root/post/likes_check', {id: data[i].user_posts[0]._id}, (res) =>{
+                    let value = '';
+                    let image = '';
+                    let likes_count = data[i].user_posts[0].Likes;
+                    if(!likes_count)
+                        likes_count = 0;
+                        if(res == true)
+                        value = '<span class="heart float-right likebutton"></span>';
+                    else{
+                        value = `<span class="material-icons float-right likebutton">
+                            favorite_border
+                        </span>`;
+                    }
+                    if(data[i].user_posts[0].image){
+                        image = `<img src='../post_assets/${data[i].user_posts[0].image}'>`;
+                    }
+                    new_card += `<div class="imgtag">
+                        <img src='../uploads/${user.profile_picture}'>
+                        <a href="/root/${user.username}">${user.first_name} ${user.last_name}</a>
+                    </div>
+                    <p id="caption">${data[i].user_posts[0].text}</p>
+                    <div class="postimg">
+                        ${image}
+                    </div>
+                    <div class="reactions">
+                        <div class="row">
+                            <div class="col-4 l${data[i].user_posts[0]._id}" id="like" data-id=${data[i].user_posts[0]._id}>
+                                ${value}
+                                <span class="likednumber float-right pr-2">${likes_count}</span>
+                            </div>
+                            <div class="col-4" id="comment">
+                                <i class="fa fa-comment-o fa-lg float-right" data-id=${data[i].user_posts[0]._id}></i>
+                                <span class="likednumber ln${data[i].user_posts[0]._id} float-right pr-2">${data[i].user_posts[0].comments.length}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="commentsSection cs${data[i].user_posts[0]._id}">
+                        <textarea class="col-12 addcomment" placeholder="Add your Comment"></textarea>
+                        <header>Comments</header>
+                    </div>`;
+                    $(".main .liked_post").append(new_card);
+                })
+            })
+        }
+    })
+
+    $(document).on('click', ".main .mypost .reactions div i, .main .liked_post .reactions div i", function(){
         $.post('/profile/one_post', {id: $(this).attr('data-id')}, (data) =>{
             let classname = '.cs' + $(this).attr('data-id');
             let commentsize = data.comments.length;
             let morecomments = '';
+            let parent_class = $(this).parent().parent().parent().parent().attr('class').split(' ')[0];
+            console.log(parent_class);
             if(commentsize > 5){
                 commentsize = 5;
                 morecomments += `<button class="loadcomments" data-show="5">show more comments</button>`;
@@ -130,18 +186,30 @@ $(document).ready(function(){
                         <a href="/root/${commenteduser.username}">${commenteduser.first_name} ${commenteduser.last_name}</a>
                         <p>${data.comments[j].text}</p>
                     </div>`;
-                    $(classname).append(arr);
+                    if(parent_class == 'mypost'){
+                        $('.mypost ' + classname).append(arr);
+                    }
+                    else{
+                        $('.liked_post ' + classname).append(arr);
+                    }
                 })
             }
             console.log(morecomments);
-            $(classname).append(morecomments);
-            $(classname).show();
+            if(parent_class == 'mypost'){
+                $('.mypost ' + classname).append(morecomments);
+                $('.mypost ' + classname).show();
+            }
+            else{
+                $('.liked_post ' + classname).append(morecomments);
+                $('.liked_post ' + classname).show();
+            }
         })
     })
 
-    $(document).on('click', '.main .mypost .commentsSection .loadcomments', function(){
+    $(document).on('click', '.main .mypost .commentsSection .loadcomments, .main .liked_post .commentsSection .loadcomments', function(){
         let classname = $(this).parent().attr('class').split(' ')[1];
         let id = classname.split('cs')[1];
+        let parent_class = $(this).parent().parent().parent().attr('class').split(' ')[0];
         $.post('/profile/one_post', {id: id}, (data) =>{
             console.log(data);
             let size = data.comments.length;
@@ -167,20 +235,31 @@ $(document).ready(function(){
                         <p>${data.comments[j].text}</p>
                     </div>`;
                     console.log(arr);
-                    $('.' + classname).append(arr);
+                    if(parent_class == 'mypost'){
+                        $('.mypost .' + classname).append(arr);
+                    }
+                    else{
+                        $('.liked_post .' + classname).append(arr);
+                    }
                 })
             }
             $(this).remove();
             console.log(morecomments);
-            $('.' + classname).append(morecomments);
+            if(parent_class == 'mypost'){
+                $('.mypost .' + classname).append(morecomments);
+            }
+            else{
+                $('.liked_post .' + classname).append(morecomments);
+            }
         })
     })
 
-    $(document).on('keyup', '.main .mypost .commentsSection .addcomment', function(e){
+    $(document).on('keyup', '.main .mypost .commentsSection .addcomment, .main .liked_post .commentsSection .addcomment', function(e){
         if(e.keyCode === 13){
             let classname = $(this).parent().attr('class').split(' ')[1];
             let id = classname.split('cs')[1];
-            console.log(id, classname);
+            let parent_class = $(this).parent().parent().attr('class').split(' ')[0];
+            console.log(id, classname, parent_class);
             $.post('/profile/one_post', {id: id}, (data) =>{
                 $.get('/root/get_username', (user)=>{
                     let val = $(this).val();
@@ -199,18 +278,37 @@ $(document).ready(function(){
                                     <a href="/root/${commenteduser.username}">${commenteduser.first_name} ${commenteduser.last_name}</a>
                                     <p>${val}</p>
                                 </div>`;
-                                $('.' + classname).append(comment);
+                                if(parent_class == 'mypost'){
+                                    $('.mypost .' + classname).append(comment);
+                                }
+                                else{
+                                    $('.liked_post .' + classname).append(comment);
+                                }
+                                $(`.ln${id}`).html(`${data.comments.length}`);
                             }
                             else{
                                 let classes = $(this).parent().attr('class').split(' ')[1];
                                 let data_show = $("." + classes + " .loadcomments").attr('data-show');
                                 console.log(classes);
-                                console.log(data_show);
+                                console.log(data_show, parent_class);
                                 $(".loadcomments").remove();
-                                if(data_show != undefined)
-                                    $('.' + classname).append(`<button class="loadcomments" data-show="${data_show}">show more comments</button>`);
-                                else
-                                    $('.' + classname).append(`<button class="loadcomments" data-show="${size}">show more comments</button>`);
+                                if(data_show != undefined){
+                                    if(parent_class == 'mypost'){
+                                        $('.mypost .' + classname).append(`<button class="loadcomments" data-show="${data_show}">show more comments</button>`);
+                                    }
+                                    else{
+                                        $('.liked_post .' + classname).append(`<button class="loadcomments" data-show="${data_show}">show more comments</button>`);
+                                    }
+                                }
+                                else{
+                                    if(parent_class == 'mypost'){
+                                        $('.mypost .' + classname).append(`<button class="loadcomments" data-show="${size}">show more comments</button>`);
+                                    }
+                                    else{
+                                        $('.liked_post .' + classname).append(`<button class="loadcomments" data-show="${size}">show more comments</button>`);
+                                    }
+                                }
+                                $(`.ln${id}`).html(`${data.comments.length}`);
                             }
                         })
                     })
@@ -219,14 +317,23 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on('click', ".main .mypost .reactions div .likebutton", function(){
+    $(document).on('click', ".main .mypost .reactions div .likebutton, .main .liked_post .reactions div .likebutton", function(){
         let id = $(this).parent().attr('data-id');
         let classname = $(this).attr('class').split(' ')[0];
         if(classname != 'heart'){
             $.post('/root/post/inc_likes', {id: id}, (data)=>{
                 console.log(data);
                 let value = $(this).parent().attr('class').split(' ')[1];
-                $('.' + value).html('<span class="heart float-right"></span>');
+                $('.' + value).html('<span class="heart float-right likebutton"></span>');
+                $('.' + value).append(`<span class="likednumber float-right pr-2">${data.Likes}</span>`)
+            })
+        }
+        else{
+            $.post('/root/post/dec_likes', {id: id}, (data)=>{
+                console.log(data);
+                let value = $(this).parent().attr('class').split(' ')[1];
+                $('.' + value).html('<span class="material-icons float-right likebutton">favorite_border</span>');
+                $('.' + value).append(`<span class="likednumber float-right pr-2">${data.Likes}</span>`)
             })
         }
     })
@@ -388,17 +495,12 @@ $(document).ready(function(){
             <a style="color: black; text-decoration: none;" href="../explore/"><li ><i class="fa fa-hashtag"></i> <span class="d-none d-lg-inline">Explore</span></li></a>
             <a style="color: black; text-decoration: none;" href="/login/logout"><li ><i class="fa fa-sign-out"></i> <span class="d-none d-lg-inline">Logout</span></li></a>
             <a style="color: black; text-decoration: none;" href="/root/${data}"><li class="active"><i class="fa fa-user"></i> <span class="d-none d-lg-inline">Profile</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../following/"><li ><i class="fa fa-users"></i> <span class="d-none d-lg-inline">followings</span></li></a>`;
+            <a style="color: black; text-decoration: none;" href="../following/"><li ><i class="fa fa-users"></i> <span class="d-none d-lg-inline">Followings</span></li></a>`;
             
             sidebar.html(str);
 
         } else {
-            let str = `<a style="color: black; text-decoration: none;" href="/"><li ><i class="fa fa-home"></i> <span class="d-none d-lg-inline">Home</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../explore/"><li ><i class="fa fa-hashtag"></i> <span class="d-none d-lg-inline">Explore</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../login/"><li ><i class="fa fa-sign-in"></i> <span class="d-none d-lg-inline">Login</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../login/signup.html"><li ><i class="fa fa-user-plus"></i> <span class="d-none d-lg-inline">Signup</span></li></a>`;
-            
-            sidebar.html(str);
+            window.location = '../login/';
         }
     });
 

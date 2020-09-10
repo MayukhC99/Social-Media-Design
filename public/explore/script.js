@@ -22,14 +22,14 @@ $(document).ready(function(){
                                 if(!count_likes)
                                     count_likes = 0;
                                 if(res == true)
-                                    value = '<span class="heart float-right"></span>';
+                                    value = '<span class="heart float-right likebutton"></span>';
                                 else{
-                                    value = `<span class="material-icons float-right">
+                                    value = `<span class="material-icons float-right likebutton">
                                         favorite_border
                                     </span>`;
                                 }
                                 if(data[i].image){
-                                    image = `../post_assets/${data[i].image}`;
+                                    image = `<img src='../post_assets/${data[i].image}'>`;
                                 }
                                 new_card += `<div class="imgtag">
                                     <img src='../uploads/${userdata.profile_picture}'>
@@ -37,17 +37,17 @@ $(document).ready(function(){
                                 </div>
                                 <p id="caption">${data[i].text}</p>
                                 <div class="postimg">
-                                    <img src='${image}'>
+                                    ${image}
                                 </div>
                                 <div class="reactions">
                                     <div class="row">
-                                        <div class="col-4 l${i}" id="like" data-id=${data[i]._id}>
+                                        <div class="col-4 l${data[i]._id}" id="like" data-id=${data[i]._id}>
                                             ${value}
                                             <span class="likednumber float-right pr-2">${count_likes}</span>
                                         </div>
                                         <div class="col-4" id="comment">
                                             <i class="fa fa-comment-o fa-lg float-right" data-id=${data[i]._id}></i>
-                                            <span class="likednumber float-right pr-2">${data[i].comments.length}</span>
+                                            <span class="likednumber ln${data[i]._id} float-right pr-2">${data[i].comments.length}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -154,6 +154,7 @@ $(document).ready(function(){
                                     <p>${val}</p>
                                 </div>`;
                                 $('.' + classname).append(comment);
+                                $(`.ln${id}`).html(`${data.comments.length}`);
                             }
                             else{
                                 let classes = $(this).parent().attr('class').split(' ')[1];
@@ -165,6 +166,7 @@ $(document).ready(function(){
                                     $('.' + classname).append(`<button class="loadcomments" data-show="${data_show}">show more comments</button>`);
                                 else
                                     $('.' + classname).append(`<button class="loadcomments" data-show="${size}">show more comments</button>`);
+                                    $(`.ln${id}`).html(`${data.comments.length}`);
                             }
                         })
                     })
@@ -223,7 +225,7 @@ $(document).ready(function(){
         })
     })
 
-    $(document).on('click', ".main .mypost .reactions div span", function(){
+    $(document).on('click', ".main .mypost .reactions div .likebutton", function(){
         let id = $(this).parent().attr('data-id');
         let classname = $(this).attr('class').split(' ')[0];
         if(classname != 'heart'){
@@ -232,12 +234,20 @@ $(document).ready(function(){
                     $.post('/root/post/inc_likes', {id: id}, (data)=>{
                         console.log(data);
                         let value = $(this).parent().attr('class').split(' ')[1];
-                        $('.' + value).html('<span class="heart float-right"></span>');
+                        $('.' + value).html('<span class="heart float-right likebutton"></span>');
                         $('.' + value).append(`<span class="likednumber float-right pr-2">${data.Likes}</span>`)
                     })
                 }
                 else 
                     window.location.assign('../login/');
+            })
+        }
+        else{
+            $.post('/root/post/dec_likes', {id: id}, (data)=>{
+                console.log(data);
+                let value = $(this).parent().attr('class').split(' ')[1];
+                $('.' + value).html('<span class="material-icons float-right likebutton">favorite_border</span>');
+                $('.' + value).append(`<span class="likednumber float-right pr-2">${data.Likes}</span>`)
             })
         }
     })
@@ -250,17 +260,12 @@ $(document).ready(function(){
             <a style="color: black; text-decoration: none;" href="./"><li class="active"><i class="fa fa-hashtag"></i> <span class="d-none d-lg-inline">Explore</span></li></a>
             <a style="color: black; text-decoration: none;" href="/login/logout"><li ><i class="fa fa-sign-out"></i> <span class="d-none d-lg-inline">Logout</span></li></a>
             <a style="color: black; text-decoration: none;" href="/root/${data}"><li ><i class="fa fa-user"></i> <span class="d-none d-lg-inline">Profile</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../following/"><li ><i class="fa fa-users"></i> <span class="d-none d-lg-inline">followings</span></li></a>`;
+            <a style="color: black; text-decoration: none;" href="../following/"><li ><i class="fa fa-users"></i> <span class="d-none d-lg-inline">Followings</span></li></a>`;
             
             sidebar.html(str);
 
         } else {
-            let str = `<a style="color: black; text-decoration: none;" href="/"><li ><i class="fa fa-home"></i> <span class="d-none d-lg-inline">Home</span></li></a>
-            <a style="color: black; text-decoration: none;" href="./"><li class="active"><i class="fa fa-hashtag"></i> <span class="d-none d-lg-inline">Explore</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../login/"><li ><i class="fa fa-sign-in"></i> <span class="d-none d-lg-inline">Login</span></li></a>
-            <a style="color: black; text-decoration: none;" href="../login/signup.html"><li ><i class="fa fa-user-plus"></i> <span class="d-none d-lg-inline">Signup</span></li></a>`;
-            
-            sidebar.html(str);
+            window.location = '../login/';
         }
     });
     $('.loading-screen').fadeOut();

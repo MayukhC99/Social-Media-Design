@@ -31,7 +31,7 @@ $(function(){
                     console.log(user);
                     if(user){
                         alert(`Welcome ${user.first_name} ${user.last_name}, Please Login to continue`);
-                        window.location.href='/';
+                        window.location.href='./index.html';
                     } else {
                         alert('User already exists. Please Signup with a different username');
                         window.location.href= './signup.html';

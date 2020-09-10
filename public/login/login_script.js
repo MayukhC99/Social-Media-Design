@@ -22,6 +22,7 @@ $(function(){
                     window.location.reload(true);
                 } else {
                     alert('You have successfully logged in.Redirecting you to Home page');
+                    user_text.val('');
                     window.location.assign('/');
                 }
             })
